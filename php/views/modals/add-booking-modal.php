@@ -21,11 +21,11 @@
 						<label>
 							<h5>
 								<?php $usingSeats ? esc_html_e('Seat ID', 'seatreg') : esc_html_e('Place ID', 'seatreg'); ?>
-								<i class="fa fa-question-circle seatreg-ui-tooltip" aria-hidden="true" title="<?php $usingSeats ? esc_html_e('ID can be seen in map-editor when hovering seats. Or you can use seat ID lookup', 'seatreg') : esc_html_e('ID can be seen in map-editor when hovering places', 'seatreg'); ?>"></i>
+								<i class="fa fa-question-circle seatreg-ui-tooltip" aria-hidden="true" title="<?php $usingSeats ? esc_html_e('ID can be seen in map-editor when hovering genericseatterms. Or you can use genericseatterm ID lookup', 'seatreg') : esc_html_e('ID can be seen in map-editor when hovering places', 'seatreg'); ?>"></i>
 							</h5>
-							<input type="text" name="seat-id[]" autocomplete="off"/>
+							<input type="text" name="genericseatterm-id[]" autocomplete="off"/>
 							<div class="input-error"></div>
-						</label> <span class="seat-id-search"><?php esc_html_e('ID lookup', 'seatreg'); ?> <i class="fa fa-search" aria-hidden="true"></i></span>
+						</label> <span class="genericseatterm-id-search"><?php esc_html_e('ID lookup', 'seatreg'); ?> <i class="fa fa-search" aria-hidden="true"></i></span>
 					</div>
 					<div class="add-modal-input-wrap">
 						<label>
@@ -72,13 +72,13 @@
 			</div>
 			<input type="hidden" name="custom-fields" />
 			<div class="bottom-action">
-				<div class="seat-operations">
-					<div class="seat-operation" id="add-modal-add-seat">
-						<?php $usingSeats ? esc_html_e('Add seat', 'seatreg') : esc_html_e('Add place', 'seatreg'); ?>
+				<div class="genericseatterm-operations">
+					<div class="genericseatterm-operation" id="add-modal-add-genericseatterm">
+						<?php $usingSeats ? esc_html_e('Add genericseatterm', 'seatreg') : esc_html_e('Add place', 'seatreg'); ?>
 						<i class="fa fa-plus-circle fa-lg" aria-hidden="true"></i>
 					</div>
-					<div class="seat-operation" id="add-modal-remove-seat">
-						<?php $usingSeats ? esc_html_e('Remove seat', 'seatreg') : esc_html_e('Remove place', 'seatreg'); ?>
+					<div class="genericseatterm-operation" id="add-modal-remove-genericseatterm">
+						<?php $usingSeats ? esc_html_e('Remove genericseatterm', 'seatreg') : esc_html_e('Remove place', 'seatreg'); ?>
 						<i class="fa fa-minus-circle fa-lg" aria-hidden="true"></i>
 					</div>
 				</div>

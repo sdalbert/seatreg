@@ -39,7 +39,7 @@ class SeatregConfirmBooking extends SeatregBooking {
 			$this->_registrationCode = $this->_bookings[0]->registration_code; 
 			$this->_bookingId = $this->_bookings[0]->booking_id;
 			$this->_bookerEmail = $this->_bookings[0]->booker_email;
-			$this->_seatPasswords = json_decode(stripslashes_deep($this->_bookings[0]->seat_passwords));
+			$this->_genericseattermPasswords = json_decode(stripslashes_deep($this->_bookings[0]->genericseatterm_passwords));
 			$this->_selectedBookingCalendarDate = $this->_bookings[0]->calendar_date;
 			$this->_wpUserId = $this->_bookings[0]->logged_in_user_id;
 		}
@@ -102,8 +102,8 @@ class SeatregConfirmBooking extends SeatregBooking {
 		$this->getRegistrationAndOptions();
 
 		//1 step
-		//Selected seat limit check
-		if(!$this->seatsLimitCheck()) {
+		//Selected genericseatterm limit check
+		if(!$this->genericseattermsLimitCheck()) {
 			esc_html_e('Error. Seat limit exceeded', 'seatreg');
 
 			return;
@@ -129,32 +129,32 @@ class SeatregConfirmBooking extends SeatregBooking {
 			return;
 		}
 
-		//4 step. Check if all selected seats are ok
-		$seatsStatusCheck = $this->doSeatsExistInRegistrationLayoutCheck();
-		if($seatsStatusCheck != 'ok') {
-			echo $seatsStatusCheck;
+		//4 step. Check if all selected genericseatterms are ok
+		$genericseattermsStatusCheck = $this->doSeatsExistInRegistrationLayoutCheck();
+		if($genericseattermsStatusCheck != 'ok') {
+			echo $genericseattermsStatusCheck;
 
 			return;
 		}
 
-		//5 step. Check if seat/seats is already bron or taken
-		$seatsOpenCheck = $this->isAllSelectedSeatsOpen($this->_selectedBookingCalendarDate); 
-		if($seatsOpenCheck != 'ok') {
-			echo $seatsOpenCheck;
+		//5 step. Check if genericseatterm/genericseatterms is already bron or taken
+		$genericseattermsOpenCheck = $this->isAllSelectedSeatsOpen($this->_selectedBookingCalendarDate); 
+		if($genericseattermsOpenCheck != 'ok') {
+			echo $genericseattermsOpenCheck;
 
 			exit();
 		}
 		
-		//6 step. Seat/seats lock check
-		$lockStatus = $this->seatLockCheck();
+		//6 step. Seat/genericseatterms lock check
+		$lockStatus = $this->genericseattermLockCheck();
 		if($lockStatus != 'ok') {
 			echo $lockStatus;
 
 			return;
 		}
 
-		//7 step. Seat/seats password check
-		$passwordStatus = $this->seatPasswordCheck();
+		//7 step. Seat/genericseatterms password check
+		$passwordStatus = $this->genericseattermPasswordCheck();
 		if($passwordStatus != 'ok') {
 			echo $passwordStatus;
 
@@ -239,8 +239,8 @@ class SeatregConfirmBooking extends SeatregBooking {
 			}
 		}
 
-		//14. WP user bookings seats limit restriction.
-		if( $this->_wp_user_bookings_seat_limit !== null && $this->_wpUserId ) {
+		//14. WP user bookings genericseatterms limit restriction.
+		if( $this->_wp_user_bookings_genericseatterm_limit !== null && $this->_wpUserId ) {
 			$wpUserBookingsSeatsLimitStatus = $this->wpUserBookingsSeatLimitCheck( $this->_wpUserId, $this->_registrationCode, count($this->bookings) );
 
 			if( $wpUserBookingsSeatsLimitStatus !== 'ok' ) {

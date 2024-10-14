@@ -16,14 +16,14 @@
 			<?php endif; ?>
 
 			<div class="edit-modal-input-wrap">
-				<label for="edit-seat">
+				<label for="edit-genericseatterm">
 					<h5>
 						<?php $usingSeats ? esc_html_e('Seat id', 'seatreg') : esc_html_e('Place id', 'seatreg'); ?>
 					</h5>
 				</label> 
-				<i class="fa fa-question-circle seatreg-ui-tooltip" aria-hidden="true" title="<?php $usingSeats ? esc_html_e('ID can be seen in map-editor when hovering seats', 'seatreg') : esc_html_e('ID can be seen in map-editor when hovering places', 'seatreg'); ?>"></i>
+				<i class="fa fa-question-circle seatreg-ui-tooltip" aria-hidden="true" title="<?php $usingSeats ? esc_html_e('ID can be seen in map-editor when hovering genericseatterms', 'seatreg') : esc_html_e('ID can be seen in map-editor when hovering places', 'seatreg'); ?>"></i>
 				<br>
-				<input type="text" id="edit-seat" name="seat-id" autocomplete="off"/></label> <span id="edit-seat-error"></span>
+				<input type="text" id="edit-genericseatterm" name="genericseatterm-id" autocomplete="off"/></label> <span id="edit-genericseatterm-error"></span>
 			</div>
 			
 			<div class="edit-modal-input-wrap">
@@ -44,7 +44,7 @@
 			<input type="hidden" id="modal-code">
 			<input type="hidden" id="booking-id">
 			<input type="hidden" id="r-id">
-			<input type="hidden" id="edit-booking-seat-nr">
+			<input type="hidden" id="edit-booking-genericseatterm-nr">
 	     </form>
       </div>
       <div class="modal-footer">

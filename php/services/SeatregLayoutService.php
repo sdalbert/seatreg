@@ -72,7 +72,7 @@ class SeatregLayoutService {
        return json_encode($layout);
     }
 
-    public static function validateRoomAndSeatId($layout, $bookingRoomName, $bookingSeatId, $seatNr = null) {
+    public static function validateRoomAndSeatId($layout, $bookingRoomName, $bookingSeatId, $genericseattermNr = null) {
         $status = (object) [
             'valid' => false,
             'searchStatus' => '',
@@ -85,16 +85,16 @@ class SeatregLayoutService {
             $status->errorText = sprintf( esc_html__('Room %s does not exist!', 'seatreg'),  esc_html($bookingRoomName) );
     
             if( $room->name == $bookingRoomName ) {
-                $status->searchStatus = 'seat-id-searching';
+                $status->searchStatus = 'genericseatterm-id-searching';
 
-                if ($seatNr !== null) {
-                    $status->errorText = sprintf(esc_html__('Seat id %s with number %s does not exist in %s', 'seatreg'), esc_html($bookingSeatId), esc_html($seatNr), esc_html($bookingRoomName));
+                if ($genericseattermNr !== null) {
+                    $status->errorText = sprintf(esc_html__('Seat id %s with number %s does not exist in %s', 'seatreg'), esc_html($bookingSeatId), esc_html($genericseattermNr), esc_html($bookingRoomName));
                 } else {
                     $status->errorText = sprintf(esc_html__('Seat id %s does not exist in %s', 'seatreg'), esc_html($bookingSeatId), esc_html($bookingRoomName));
                 }
                 
                 foreach( $layoutData->boxes as $box ) {    
-                    if( $box->canRegister == 'true' && $box->id == $bookingSeatId && ( $seatNr === null || $box->seat == $seatNr ) ) {
+                    if( $box->canRegister == 'true' && $box->id == $bookingSeatId && ( $genericseattermNr === null || $box->genericseatterm == $genericseattermNr ) ) {
                         $status->errorText = '';
                         $status->valid = true;
 
@@ -153,7 +153,7 @@ class SeatregLayoutService {
      * check if multi price UUID exists 
      * @param object $booking Booking
      * @param array $layout Registration layout
-     * @return string|false Returns false if the price UUID won't exist on the seat. If exist return the multi-price object
+     * @return string|false Returns false if the price UUID won't exist on the genericseatterm. If exist return the multi-price object
      * 
     */
 
@@ -163,7 +163,7 @@ class SeatregLayoutService {
         foreach( $layout as $layoutData ) {
             if( $layoutData->room->uuid === $booking->room_uuid ) {
                 foreach( $layoutData->boxes as $box ) {
-                    if( $box->id === $booking->seat_id ) {
+                    if( $box->id === $booking->genericseatterm_id ) {
                         $prices = $box->price;
 
                         foreach( $prices as $price ) {
@@ -184,7 +184,7 @@ class SeatregLayoutService {
 
      /**
      *
-     * Return seat price from registration layout
+     * Return genericseatterm price from registration layout
      *
     */
     public static function getSeatPriceFromLayout($booking, $roomsData) {
@@ -197,7 +197,7 @@ class SeatregLayoutService {
         foreach($roomsData as $roomData) {
             if($roomData->room->uuid === $booking->room_uuid) {
                 foreach($roomData->boxes as $box) {
-                    if($box->id === $booking->seat_id) {
+                    if($box->id === $booking->genericseatterm_id) {
                         if( $booking->multi_price_selection ) {
                             //multy price selection
                             foreach($box->price as $multyPrice) {
@@ -249,16 +249,16 @@ class SeatregLayoutService {
 
         for($i = 0; $i < $roomCount; $i++) {
             $roomBoxes = $regStructure[$i]->boxes;
-            //find how many bron seats in this room
+            //find how many bron genericseatterms in this room
             $roomBoxCount = count($roomBoxes);
-            $roomRegSeats = 0;  //how many reg seats
-            $roomOpenSeats = 0; //how many open reg seats
-            $roomTakenSeats = 0; //how many taken seats
-            $roomBronSeats = 0;	//bron seats
+            $roomRegSeats = 0;  //how many reg genericseatterms
+            $roomOpenSeats = 0; //how many open reg genericseatterms
+            $roomTakenSeats = 0; //how many taken genericseatterms
+            $roomBronSeats = 0;	//bron genericseatterms
             $roomCustomBoxes = 0;
     
             for($k = 0; $k < $bronLength; $k++) {  
-                if( $regStructure[$i]->room->uuid == $bronRegistrations[$k]->room_uuid ) { //find how many bron seats in this room
+                if( $regStructure[$i]->room->uuid == $bronRegistrations[$k]->room_uuid ) { //find how many bron genericseatterms in this room
                     $roomBronSeats = $bronRegistrations[$k]->total;
                     $howManyBronSeats += $bronRegistrations[$k]->total;
     
@@ -267,7 +267,7 @@ class SeatregLayoutService {
             }
     
             for($k = 0; $k < $takenLength; $k++) {
-                if($regStructure[$i]->room->uuid == $takenRegistrations[$k]->room_uuid) { //find how many taken seats in this room
+                if($regStructure[$i]->room->uuid == $takenRegistrations[$k]->room_uuid) { //find how many taken genericseatterms in this room
                     $roomTakenSeats = $takenRegistrations[$k]->total;
                     $howManyTakenSeats += $takenRegistrations[$k]->total;
     
@@ -300,7 +300,7 @@ class SeatregLayoutService {
             );
         }
 
-        $statsArray['seatsTotal'] = $howManyRegSeats;
+        $statsArray['genericseattermsTotal'] = $howManyRegSeats;
         $statsArray['openSeats'] = $howManyOpenSeats - $howManyBronSeats - $howManyTakenSeats;
         $statsArray['bronSeats'] = $howManyBronSeats;
         $statsArray['takenSeats'] = $howManyTakenSeats;

@@ -74,7 +74,7 @@ class SeatregRegistrationService {
     		$seatreg_db_table_names->table_seatreg_options,
     		array(
                 'registration_code' => $generatedCode,
-                'seats_at_once' => $registrationData->seats_at_once,
+                'genericseatterms_at_once' => $registrationData->genericseatterms_at_once,
                 'gmail_required' => $registrationData->gmail_required,
                 'registration_open' => $registrationData->registration_open,
                 'use_pending' => $registrationData->use_pending,
@@ -100,7 +100,7 @@ class SeatregRegistrationService {
                 'approved_booking_email_template' => $registrationData->approved_booking_email_template,
                 'payment_completed_set_booking_confirmed_stripe' => $registrationData->payment_completed_set_booking_confirmed_stripe,
                 'stripe_api_key' => $registrationData->stripe_api_key,
-                'seat_selection_btn_text' => $registrationData->seat_selection_btn_text,
+                'genericseatterm_selection_btn_text' => $registrationData->genericseatterm_selection_btn_text,
                 'custom_styles' => $registrationData->custom_styles,
                 'booking_status_page_custom_styles' => $registrationData->booking_status_page_custom_styles,
                 'booking_confirm_page_custom_styles' => $registrationData->booking_confirm_page_custom_styles,
@@ -113,7 +113,7 @@ class SeatregRegistrationService {
                 'booking_qr_code_input' => $registrationData->booking_qr_code_input,
                 'show_pending_booking_pdf' => $registrationData->show_pending_booking_pdf,
                 'show_approved_booking_pdf' => $registrationData->show_approved_booking_pdf,
-                'using_seats' => $registrationData->using_seats,
+                'using_genericseatterms' => $registrationData->using_genericseatterms,
                 'controlled_scroll' => $registrationData->controlled_scroll,
                 'booking_email_limit' => $registrationData->booking_email_limit
             ),

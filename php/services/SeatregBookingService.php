@@ -16,8 +16,8 @@ class SeatregBookingService {
         $totalCost = 0;
     
         foreach($bookings as $booking) {
-            $seatPrice = SeatregLayoutService::getSeatPriceFromLayout($booking, $roomsData);
-            $totalCost += $seatPrice->price;
+            $genericseattermPrice = SeatregLayoutService::getSeatPriceFromLayout($booking, $roomsData);
+            $totalCost += $genericseattermPrice->price;
         }
     
         return $totalCost;
@@ -25,7 +25,7 @@ class SeatregBookingService {
 
     /**
      *
-     * Return booked seats and their cost
+     * Return booked genericseatterms and their cost
      *
     */
     public static function getBookingsCost($bookingId, $registrationLayout) {
@@ -33,7 +33,7 @@ class SeatregBookingService {
         $roomsData = json_decode($registrationLayout)->roomData;
 
         return array_map(function($booking) use($roomsData) {
-            $seatPrice = SeatregLayoutService::getSeatPriceFromLayout($booking, $roomsData);
+            $genericseattermPrice = SeatregLayoutService::getSeatPriceFromLayout($booking, $roomsData);
             $priceDescription = null;
 
             if( $booking->multi_price_selection ) {
@@ -45,9 +45,9 @@ class SeatregBookingService {
             }
 
             return (object)[
-                'seatId' => $booking->seat_id,
-                'seatNr' => $booking->seat_nr,
-                'price' => $seatPrice->price,
+                'genericseattermId' => $booking->genericseatterm_id,
+                'genericseattermNr' => $booking->genericseatterm_nr,
+                'price' => $genericseattermPrice->price,
                 'description' => $priceDescription
             ];
         }, $bookings);
@@ -110,7 +110,7 @@ class SeatregBookingService {
         $customFieldLabels = array_map(function($customField) {
             return $customField->label;
         }, is_array( $enteredCustomFieldData) ? $enteredCustomFieldData : [] );
-        $spotName = $registration->using_seats ? __('Seat', 'seatreg') : __('Place', 'seatreg');
+        $spotName = $registration->using_genericseatterms ? __('Seat', 'seatreg') : __('Place', 'seatreg');
         $hasCalendarDate = (boolean)$bookings[0]->calendar_date;
 
         $bookingTable = '<table style="border: 1px solid black;border-collapse: collapse;">
@@ -133,7 +133,7 @@ class SeatregBookingService {
             $bookingCustomFields = json_decode($booking->custom_field_data);
             $bookingTable .= '<tr>
                 <td style="border:1px solid black;padding: 6px;">'. esc_html($booking->first_name . ' ' .  $booking->last_name) .'</td>
-                <td style="border:1px solid black;padding: 6px;">'. esc_html($booking->seat_nr) . '</td>
+                <td style="border:1px solid black;padding: 6px;">'. esc_html($booking->genericseatterm_nr) . '</td>
                 <td style="border:1px solid black;padding: 6px;">'. esc_html($booking->room_name) . '</td>
                 <td style="border:1px solid black;padding: 6px;">'. esc_html($booking->email) . '</td>';
 
@@ -168,7 +168,7 @@ class SeatregBookingService {
         $bookingData = SeatregBookingRepository::getDataRelatedToBooking($bookingId);
         $bookings = self::getBookingsCost($bookingId, $bookingData->registration_layout);
         $totalCost = 0;
-        $spotName = $bookingData->using_seats ? __('Seat', 'seatreg') : __('Place', 'seatreg');
+        $spotName = $bookingData->using_genericseatterms ? __('Seat', 'seatreg') : __('Place', 'seatreg');
         $paymentTable = '<table style="border: 1px solid black;border-collapse: collapse;">
             <tr>
                 <th style=";border:1px solid black;text-align: left;padding: 6px;">' . $spotName . '</th>
@@ -180,7 +180,7 @@ class SeatregBookingService {
             $priceDescription = $booking->description ? "($booking->description)" : null;
 
             $paymentTable .= '<tr>';
-                $paymentTable .= '<td style=";border:1px solid black;padding: 6px;"">'. esc_html($booking->seatNr) .'</td>';
+                $paymentTable .= '<td style=";border:1px solid black;padding: 6px;"">'. esc_html($booking->genericseattermNr) .'</td>';
                 $paymentTable .= '<td style=";border:1px solid black;padding: 6px;"">'. esc_html($booking->price) . ' ' . $bookingData->paypal_currency_code . ' ' . $priceDescription  . '</td>';
             $paymentTable .= '</tr>';
         }
@@ -234,15 +234,15 @@ class SeatregBookingService {
         return false;
     }
 
-    public static function checkIfSeatAlreadyBooked($seatId, $seatNr, $existingBookings) {	
+    public static function checkIfSeatAlreadyBooked($genericseattermId, $genericseattermNr, $existingBookings) {	
             $statusReport = (object) ['is_valid' => true, 'messages' => []];
             $bookingsLength = count($existingBookings);
     
             for($i = 0; $i < $bookingsLength; $i++) {
             
-                if( $existingBookings[$i]->seat_id == $seatId) {
+                if( $existingBookings[$i]->genericseatterm_id == $genericseattermId) {
                     $statusReport->is_valid = false;
-                    $statusReport->messages[] = 'Seat '. esc_html($seatNr) . ' with ID ' . $seatId . ' is already booked';
+                    $statusReport->messages[] = 'Seat '. esc_html($genericseattermNr) . ' with ID ' . $genericseattermId . ' is already booked';
     
                     break;
                 }

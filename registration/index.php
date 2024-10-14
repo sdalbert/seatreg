@@ -22,7 +22,7 @@
 	$registrationTime = seatreg_registration_time_status( $data->registration_start_timestamp,  $data->registration_end_timestamp );
 	$registrationTimeRestoriction = SeatregTimeRepository::getTimeInfoForRegistrationView($data->registration_start_time, $data->registration_end_time);
 	$hasFailedTimeRestriction = !$registrationTimeRestoriction->registrationStartCheck  || !$registrationTimeRestoriction->registrationEndCheck;
-	$usingSeats = $data->using_seats === '1';
+	$usingSeats = $data->using_genericseatterms === '1';
 	$requireWPLogin = $data->require_wp_login === '1';
 	$needsToLogIn = $requireWPLogin && !SeatregAuthService::isLoggedIn();
 
@@ -163,18 +163,18 @@
 							<i class="fa fa-info-circle"></i>
 						</div>
 						
-						<div id="seat-cart" class="border-box no-select">
-							<div class="seat-cart-left">
+						<div id="genericseatterm-cart" class="border-box no-select">
+							<div class="genericseatterm-cart-left">
 								<div id="cart-text">
-									<div class="seats-in-cart">0</div>
-									<div><?php $usingSeats ? esc_html_e('seats selected', 'seatreg') : esc_html_e('places selected', 'seatreg'); ?></div> 
+									<div class="genericseatterms-in-cart">0</div>
+									<div><?php $usingSeats ? esc_html_e('genericseatterms selected', 'seatreg') : esc_html_e('places selected', 'seatreg'); ?></div> 
 								</div>
 							</div>
 
-							<div class="seat-cart-right">
+							<div class="genericseatterm-cart-right">
 								<div id="cart-checkout-btn" class="border-box">
 									<?php 
-										echo $data->seat_selection_btn_text ? esc_html($data->seat_selection_btn_text) : esc_html__('Open', 'seatreg');
+										echo $data->genericseatterm_selection_btn_text ? esc_html($data->genericseatterm_selection_btn_text) : esc_html__('Open', 'seatreg');
 									?>
 								</div>
 							</div>
@@ -244,7 +244,7 @@
 							<?php esc_html_e('Total rooms', 'seatreg'); ?>: <span class="total-rooms"></span>
 						</div>
 						<div>
-							<?php $usingSeats ? esc_html_e('Total open seats', 'seatreg') : esc_html_e('Total open places', 'seatreg') ; ?>: <span class="total-open"></span>
+							<?php $usingSeats ? esc_html_e('Total open genericseatterms', 'seatreg') : esc_html_e('Total open places', 'seatreg') ; ?>: <span class="total-open"></span>
 						</div>
 						<div>
 							<?php esc_html_e('Total pending bookings', 'seatreg'); ?>: <span class="total-bron"></span>
@@ -299,16 +299,16 @@
 						<div id="confirm-dialog-bottom"></div>
 					<?php endif; ?>
 
-					<input type="hidden" id="selected-seat">
-					<input type="hidden" id="selected-seat-room">
-					<input type="hidden" id="selected-seat-nr">
+					<input type="hidden" id="selected-genericseatterm">
+					<input type="hidden" id="selected-genericseatterm-room">
+					<input type="hidden" id="selected-genericseatterm-nr">
 					<input type="hidden" id="selected-room-uuid">
-					<input type="hidden" id="selected-seat-price">
+					<input type="hidden" id="selected-genericseatterm-price">
 					<input type="hidden" id="selected-multi-price-uuid">
 				</div>
 			</div>
 
-			<div id="seat-cart-popup" class="dialog-box">	
+			<div id="genericseatterm-cart-popup" class="dialog-box">	
 				<div class="cart-popup-inner dialog-box-inner border-box">
 
 					<div id="cart-popup-close" class="close-btn">
@@ -316,13 +316,13 @@
 						<i class="fa fa-times-circle"></i>
 					</div>
 
-					<div id="seat-cart-info">
+					<div id="genericseatterm-cart-info">
 						<?php 
 							esc_html_e('Cart', 'seatreg');
 						?>
 					</div>
 					<?php if( $registrationTime == 'run' && !$hasFailedTimeRestriction && !$needsToLogIn) : ?>
-						<div id="seat-cart-rows">
+						<div id="genericseatterm-cart-rows">
 							<div class="row-nr">
 								<?php
 									esc_html_e('No.', 'seatreg');
@@ -335,7 +335,7 @@
 							</div>
 						</div>
 						
-						<div id="seat-cart-items"></div>
+						<div id="genericseatterm-cart-items"></div>
 						
 						<?php if( SeatregPaymentRepository::hasPaymentEnabled($data) ) : ?>
 							<div id="booking-total-price" data-booking-price="0"></div>
@@ -369,7 +369,7 @@
 					</button>
 					<img src="<?php echo SEATREG_PLUGIN_FOLDER_URL; ?>img/ajax_loader.gif" alt="Loading" class="ajax-load">
 					<div id="request-error"></div>
-					<?php seatrag_generate_nonce_field('seatreg-booking-submit'); ?>
+					<?php genericseattermrag_generate_nonce_field('seatreg-booking-submit'); ?>
 				</form>
 			</div>
 
@@ -378,15 +378,15 @@
 			<div id="bottom-wrapper">
 				<div class="mobile-cart">
 					<div class="cart-icon-text">
-						<span class="seats-in-cart">0</span> 
+						<span class="genericseatterms-in-cart">0</span> 
 						<?php 
-							$usingSeats ? esc_html_e('seats selected', 'seatreg') : esc_html_e('places selected', 'seatreg');
+							$usingSeats ? esc_html_e('genericseatterms selected', 'seatreg') : esc_html_e('places selected', 'seatreg');
 						?>
 					</div>
 					<div class="bottom-btn-wrap">
 						<div class="bottom-btn">
 							<?php 
-								echo $data->seat_selection_btn_text ? esc_html($data->seat_selection_btn_text) : esc_html__('Open', 'seatreg');
+								echo $data->genericseatterm_selection_btn_text ? esc_html($data->genericseatterm_selection_btn_text) : esc_html__('Open', 'seatreg');
 							?>
 						</div>
 					</div>

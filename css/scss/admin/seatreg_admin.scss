@@ -2,7 +2,7 @@
 @import "modal/add-booking";
 @import "modal/booking-activity";
 @import "modal/booking-file";
-@import "modal/seat-id";
+@import "modal/genericseatterm-id";
 @import "modal/import-booking";
 @import "modal/import-booking-finalize";
 @import "loaders/booking-manager";
@@ -421,20 +421,20 @@ html {
   background-color: #fff;
 }
 
-.seatreg-tabs-content .reg-seat-item {
+.seatreg-tabs-content .reg-genericseatterm-item {
   border-bottom: 3px solid #f0f0f0;
   font-size: 14px;
   padding: 16px;
   background-color: #fff;
   overflow: hidden;
 }
-.seatreg-tabs-content .seat-nr-box {
+.seatreg-tabs-content .genericseatterm-nr-box {
   width: 60px;
 }
-.seatreg-tabs-content .seat-id-box {
+.seatreg-tabs-content .genericseatterm-id-box {
   margin-right: 30px;
 }
-.seatreg-tabs-content .seat-room-box {
+.seatreg-tabs-content .genericseatterm-room-box {
   width: 140px;
   text-align: center;
 }
@@ -443,7 +443,7 @@ html {
   margin-left: 180px;
 }
 
-.seatreg-tabs-content .seat-name-box {
+.seatreg-tabs-content .genericseatterm-name-box {
   width: 140px;
   text-align: center;
   text-overflow: ellipsis;
@@ -461,7 +461,7 @@ html {
   -moz-box-sizing: border-box; /* Firefox, other Gecko */
   box-sizing: border-box; /* Opera/IE 8+ */
 }
-.seatreg-tabs-content .seat-date-box {
+.seatreg-tabs-content .genericseatterm-date-box {
   width: 140px;
   text-align: center;
 }
@@ -482,7 +482,7 @@ html {
 .seatreg-tabs-content .manager-box {
   display: inline-block;
 }
-.seatreg-tabs-content .reg-seat-item .booking-id-box {
+.seatreg-tabs-content .reg-genericseatterm-item .booking-id-box {
   min-width: 340px;
 }
 .seatreg-tabs-content .manager-box-link:hover {
@@ -493,7 +493,7 @@ html {
   position: relative;
 }
 
-.seatreg-tabs-content .seat-date-label {
+.seatreg-tabs-content .genericseatterm-date-label {
   margin-right: 60px;
 }
 .seatreg-tabs-content .reg-name {

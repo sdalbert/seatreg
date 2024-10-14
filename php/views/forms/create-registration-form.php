@@ -7,7 +7,7 @@
     </label>
     <input type="text" name="new-registration-name" id="new-registration-name" style="margin-left: 12px" maxlength="<?php echo SEATREG_REGISTRATION_NAME_MAX_LENGTH; ?>">
     <input type='hidden' name='action' value='seatreg_create_submit' />
-    <?php echo seatrag_generate_nonce_field('seatreg-admin-nonce'); ?>
+    <?php echo genericseattermrag_generate_nonce_field('seatreg-admin-nonce'); ?>
     <?php
         submit_button(esc_html__('Create new registration', 'seatreg'));
     ?>

@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class SeatregBooking {
-	protected $_bookings; //seat bookings 
+	protected $_bookings; //genericseatterm bookings 
 	protected $_registrationLayout;
 	protected $_registrationLayoutFull;
 	protected $_registrationCode;
@@ -13,9 +13,9 @@ class SeatregBooking {
 	protected $_requireBookingEmailConfirm = true;
 	protected $_insertState = 1;  //all bookings will have status = 1 (pending). if 2 then (confirmed)
 	protected $_registrationName;
-	protected $_sendNewBookingNotificationEmail = null; //send notification to admin that someone has booked a seat
+	protected $_sendNewBookingNotificationEmail = null; //send notification to admin that someone has booked a genericseatterm
 	protected $_sendNewPendingBookingNotificationBookerEmail = null; //send notification to booker that the booking is pending
-	protected $_maxSeats = 1;  //how many seats per booking can be booked
+	protected $_maxSeats = 1;  //how many genericseatterms per booking can be booked
 	protected $_isRegistrationOpen = true; //is registration open
 	protected $_registrationPassword = null;  //registration password if set. null default
 	protected $_registrationEndTimestamp; //when registration ends
@@ -29,7 +29,7 @@ class SeatregBooking {
 	protected $_approvedBookingSubject;
 	protected $_approvedBookingTemplate;
 	protected $_sendApprovedBookingEmail;
-	protected $_seatPasswords; //seat passwords provided by seat registration
+	protected $_genericseattermPasswords; //genericseatterm passwords provided by genericseatterm registration
 	protected $_emailFromAddress = null;
 	protected $_bookingSameEmailLimit = null;
 	protected $_usingCalendar = false; //is registration calendar mode activated?
@@ -39,17 +39,17 @@ class SeatregBooking {
 	protected $_registrationEndTime = null;
 	protected $_require_wp_login = null;
 	protected $_wp_user_booking_limit = null;
-	protected $_wp_user_bookings_seat_limit = null;
+	protected $_wp_user_bookings_genericseatterm_limit = null;
 	
     protected function generateSeatString() {
     	$dataLen = count($this->_bookings);
-    	$seatsString = '';
+    	$genericseattermsString = '';
 
     	for($i = 0; $i < $dataLen; $i++) {
-    		$seatsString .= esc_html__('Seat nr', 'seatreg') . ': <b>' . esc_html($this->_bookings[$i]->seat_nr) . '</b> ' . esc_html__('from room', 'seatreg') . ': <b>' . esc_html($this->_bookings[$i]->room_name) . '</b><br/>'; 
+    		$genericseattermsString .= esc_html__('Seat nr', 'seatreg') . ': <b>' . esc_html($this->_bookings[$i]->genericseatterm_nr) . '</b> ' . esc_html__('from room', 'seatreg') . ': <b>' . esc_html($this->_bookings[$i]->room_name) . '</b><br/>'; 
 		}
 		
-    	return $seatsString;
+    	return $genericseattermsString;
     }
 
     protected function isAllSelectedSeatsOpen($calendarDate = null) {  
@@ -60,8 +60,8 @@ class SeatregBooking {
 
 		for($i = 0; $i < $bookingsLength; $i++) {
 			for($j = 0; $j < $bookedBookingsLength; $j++) {
-				if($this->_bookings[$i]->seat_id == $bookedBookings[$j]->seat_id) {
-					$statusReport = 'Seat <b>'. esc_html($this->_bookings[$i]->seat_nr) . '</b> in room <b>' . esc_html($this->_bookings[$i]->room_name) . '</b > is already confirmed';
+				if($this->_bookings[$i]->genericseatterm_id == $bookedBookings[$j]->genericseatterm_id) {
+					$statusReport = 'Seat <b>'. esc_html($this->_bookings[$i]->genericseatterm_nr) . '</b> in room <b>' . esc_html($this->_bookings[$i]->room_name) . '</b > is already confirmed';
 
 					if( $calendarDate ) {
 						$statusReport .= ' for <b>' . $calendarDate . '<b>';
@@ -74,12 +74,12 @@ class SeatregBooking {
 		return $statusReport;
 	}
 
-	protected function seatLockCheck() {
+	protected function genericseattermLockCheck() {
 		$statusReport = 'ok';
 
 		foreach( $this->_bookings as $booking ) {
-			if( SeatregLayoutService::checkIfSeatLocked($this->_registrationLayoutFull, $booking->seat_id) ) {
-				$statusReport = sprintf(esc_html__('Seat %s is locked', 'seatreg'),  $booking->seat_nr);
+			if( SeatregLayoutService::checkIfSeatLocked($this->_registrationLayoutFull, $booking->genericseatterm_id) ) {
+				$statusReport = sprintf(esc_html__('Seat %s is locked', 'seatreg'),  $booking->genericseatterm_nr);
 
 				break;
 			}
@@ -88,16 +88,16 @@ class SeatregBooking {
 		return $statusReport;
 	}
 
-	protected function seatPasswordCheck() {
+	protected function genericseattermPasswordCheck() {
 		$statusReport = 'ok';
 
 		foreach( $this->_bookings as $booking ) {
-			if( SeatregLayoutService::checkIfSeatHasPassword($this->_registrationLayoutFull, $booking->seat_id) ) {
-				$enteredSeatPasswords = get_object_vars($this->_seatPasswords);
-				$enteredPassword = array_key_exists($booking->seat_id, $enteredSeatPasswords) ? $enteredSeatPasswords[$booking->seat_id] : '';
+			if( SeatregLayoutService::checkIfSeatHasPassword($this->_registrationLayoutFull, $booking->genericseatterm_id) ) {
+				$enteredSeatPasswords = get_object_vars($this->_genericseattermPasswords);
+				$enteredPassword = array_key_exists($booking->genericseatterm_id, $enteredSeatPasswords) ? $enteredSeatPasswords[$booking->genericseatterm_id] : '';
 
-				if( SeatregLayoutService::getSeatPassword($this->_registrationLayoutFull, $booking->seat_id) !== $enteredPassword ) {
-					$statusReport = sprintf(esc_html__('Seat %s password is not correct', 'seatreg'),  $booking->seat_nr);
+				if( SeatregLayoutService::getSeatPassword($this->_registrationLayoutFull, $booking->genericseatterm_id) !== $enteredPassword ) {
+					$statusReport = sprintf(esc_html__('Seat %s password is not correct', 'seatreg'),  $booking->genericseatterm_nr);
 
 					break;
 				}
@@ -121,7 +121,7 @@ class SeatregBooking {
 		return $statusReport;
 	}
 
-	protected function seatsLimitCheck() {
+	protected function genericseattermsLimitCheck() {
 		if(count($this->_bookings) > $this->_maxSeats) {
 
 			return false;
@@ -177,7 +177,7 @@ class SeatregBooking {
 	}
     
     protected function doSeatsExistInRegistrationLayoutCheck() {
-		//check if seats are in rooms and seat numbers are correct.
+		//check if genericseatterms are in rooms and genericseatterm numbers are correct.
 		$bookingsLenght = count($this->_bookings);
 		$layoutLenght = count($this->_registrationLayout);
         $status = 'ok';
@@ -186,30 +186,30 @@ class SeatregBooking {
 			$searchStatus = 'room-searching';
 
 			for($j = 0; $j < $layoutLenght; $j++) {
-				//looking user selected seat items
+				//looking user selected genericseatterm items
 
 				if($this->_registrationLayout[$j]->room->uuid == $this->_bookings[$i]->room_uuid) {
 					//found room
-					$searchStatus = 'seat-searching';
+					$searchStatus = 'genericseatterm-searching';
 					
 					$boxesLenght = count($this->_registrationLayout[$j]->boxes);
 
 					for($k = 0; $k < $boxesLenght; $k++) {
 						//looping boxes
-						if($this->_registrationLayout[$j]->boxes[$k]->canRegister === 'true' && $this->_registrationLayout[$j]->boxes[$k]->id == $this->_bookings[$i]->seat_id) {
+						if($this->_registrationLayout[$j]->boxes[$k]->canRegister === 'true' && $this->_registrationLayout[$j]->boxes[$k]->id == $this->_bookings[$i]->genericseatterm_id) {
 							
 							//found box
 							if($this->_registrationLayout[$j]->boxes[$k]->status == 'noStatus') {
-								//seat is available
-								$searchStatus = 'seat-nr-check';
-								$seatPrefix = property_exists($this->_registrationLayout[$j]->boxes[$k], 'prefix') ? $this->_registrationLayout[$j]->boxes[$k]->prefix : '';
+								//genericseatterm is available
+								$searchStatus = 'genericseatterm-nr-check';
+								$genericseattermPrefix = property_exists($this->_registrationLayout[$j]->boxes[$k], 'prefix') ? $this->_registrationLayout[$j]->boxes[$k]->prefix : '';
 							
-								if($seatPrefix . $this->_registrationLayout[$j]->boxes[$k]->seat == $this->_bookings[$i]->seat_nr) {
-									$searchStatus = 'seat-ok';
+								if($genericseattermPrefix . $this->_registrationLayout[$j]->boxes[$k]->genericseatterm == $this->_bookings[$i]->genericseatterm_nr) {
+									$searchStatus = 'genericseatterm-ok';
 								}
 
 							}else {
-								$searchStatus = 'seat-taken';
+								$searchStatus = 'genericseatterm-taken';
 							}
 
 							break;
@@ -226,18 +226,18 @@ class SeatregBooking {
 				$allCorrect = false;
 
 				break;
-			}else if($searchStatus == 'seat-searching') {
-				$status = 'id '. esc_html($this->_bookings[$i]->seat_id) . ' was not found';
+			}else if($searchStatus == 'genericseatterm-searching') {
+				$status = 'id '. esc_html($this->_bookings[$i]->genericseatterm_id) . ' was not found';
 				$allCorrect = false;
 
 				break;
-			}else if($searchStatus == 'seat-nr-check') {
-				$status = 'id '. esc_html($this->_bookings[$i]->seat_nr) . ' number was not correct';
+			}else if($searchStatus == 'genericseatterm-nr-check') {
+				$status = 'id '. esc_html($this->_bookings[$i]->genericseatterm_nr) . ' number was not correct';
 				$allCorrect = false;
 
 				break;
-			}else if($searchStatus == 'seat-taken') {
-				$status = 'id '. esc_html($this->_bookings[$i]->seat_id) . ' is not available';
+			}else if($searchStatus == 'genericseatterm-taken') {
+				$status = 'id '. esc_html($this->_bookings[$i]->genericseatterm_id) . ' is not available';
 				$allCorrect = false;
 				
 				break;
@@ -283,8 +283,8 @@ class SeatregBooking {
 		$statusReport = 'ok';
 		$bookingsByUser = SeatregBookingRepository::getUserBookings($userId, $registrationCode);
 
-		if( ($bookingsByUser + $newBookingsLength) > $this->_wp_user_bookings_seat_limit ) {
-			$statusReport = sprintf(esc_html__('Allowed number of total booked seats per user is %s. You have booked previously %s ', 'seatreg'), $this->_wp_user_bookings_seat_limit, $bookingsByUser);
+		if( ($bookingsByUser + $newBookingsLength) > $this->_wp_user_bookings_genericseatterm_limit ) {
+			$statusReport = sprintf(esc_html__('Allowed number of total booked genericseatterms per user is %s. You have booked previously %s ', 'seatreg'), $this->_wp_user_bookings_genericseatterm_limit, $bookingsByUser);
 		}
 
 		return $statusReport;
@@ -298,7 +298,7 @@ class SeatregBooking {
 		$this->_registrationLayout = json_decode($result->registration_layout)->roomData;
 		$this->_registrationLayoutFull = json_decode($result->registration_layout);
         $this->_registrationName = $result->registration_name;
-		$this->_maxSeats = $result->seats_at_once;
+		$this->_maxSeats = $result->genericseatterms_at_once;
 		$this->_requireBookingEmailConfirm = $result->booking_email_confirm;
 		$this->_createdCustomFields = json_decode($result->custom_fields ?? '[]');
 		$this->_emailVerificationSubject = $result->verification_email_subject;
@@ -316,7 +316,7 @@ class SeatregBooking {
 		$this->_registrationEndTime = $result->registration_end_time;
 		$this->_require_wp_login = $result->require_wp_login;
 		$this->_wp_user_booking_limit = $result->wp_user_booking_limit ? (int)$result->wp_user_booking_limit: null;
-		$this->_wp_user_bookings_seat_limit = $result->wp_user_bookings_seat_limit ? (int)$result->wp_user_bookings_seat_limit: null;
+		$this->_wp_user_bookings_genericseatterm_limit = $result->wp_user_bookings_genericseatterm_limit ? (int)$result->wp_user_bookings_genericseatterm_limit: null;
 		
         if($result->gmail_required == '1') {
 			$this->_gmailNeeded = true;

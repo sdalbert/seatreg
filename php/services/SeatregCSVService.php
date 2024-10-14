@@ -60,17 +60,17 @@ class SeatregCSVService {
                 $obj->messages[] = 'Invalid room UUID';
             }
             $obj->room_name = $roomName;
-            $seatAndRoomValidation = SeatregLayoutService::validateRoomAndSeatId($this->roomData, $roomName, $row[SEATREG_CSV_COL_SEAT_ID], $row[SEATREG_CSV_COL_SEAT_NR]);
-            if( !$seatAndRoomValidation->valid ) {
+            $genericseattermAndRoomValidation = SeatregLayoutService::validateRoomAndSeatId($this->roomData, $roomName, $row[SEATREG_CSV_COL_GENERICSEATTERM_ID], $row[SEATREG_CSV_COL_GENERICSEATTERM_NR]);
+            if( !$genericseattermAndRoomValidation->valid ) {
                 $obj->is_valid = false;
-                $obj->messages[] = $seatAndRoomValidation->errorText;
+                $obj->messages[] = $genericseattermAndRoomValidation->errorText;
             }
 
-            $seatBookedValidation = SeatregBookingService::checkIfSeatAlreadyBooked($row[SEATREG_CSV_COL_SEAT_ID], $row[SEATREG_CSV_COL_SEAT_NR], $this->existingBookings);
+            $genericseattermBookedValidation = SeatregBookingService::checkIfSeatAlreadyBooked($row[SEATREG_CSV_COL_GENERICSEATTERM_ID], $row[SEATREG_CSV_COL_GENERICSEATTERM_NR], $this->existingBookings);
 
-            if( !$seatBookedValidation->is_valid ) {
+            if( !$genericseattermBookedValidation->is_valid ) {
                 $obj->is_valid = false;
-                $obj->messages = array_merge($obj->messages, $seatBookedValidation->messages);
+                $obj->messages = array_merge($obj->messages, $genericseattermBookedValidation->messages);
             }
 
             $validatedData[] = $obj;

@@ -575,7 +575,7 @@ body {
 	display: inline-block;
 	margin-right: 10px;
 }
-.info-item.open-seats {
+.info-item.open-genericseatterms {
 	display: block;
 	font-size: 18px;
 	margin-bottom: 4px;
@@ -761,7 +761,7 @@ body {
 	animation: 		   legblink 1s 2;
 }
 
-@-webkit-keyframes selected-seat {
+@-webkit-keyframes selected-genericseatterm {
         0%   { 
 
         	-webkit-box-shadow: 0 0 20px 5px var(--animationColor);
@@ -776,7 +776,7 @@ body {
 			 box-shadow: 0 0 20px 5px var(--animationColor);	
         }
 }
-@-moz-keyframes selected-seat {
+@-moz-keyframes selected-genericseatterm {
         0%   { 
 
         	-moz-box-shadow: 0 0 20px 5px var(--animationColor);
@@ -791,7 +791,7 @@ body {
 			 box-shadow: 0 0 20px 5px var(--animationColor);	
         }
 }
-@-ms-keyframes selected-seat {
+@-ms-keyframes selected-genericseatterm {
         0%   { 
 
         	-ms-box-shadow: 0 0 20px 5px var(--animationColor);
@@ -808,10 +808,10 @@ body {
 }
 
 .box[data-selectedbox='true'] {
-	-webkit-animation: selected-seat 1s infinite;
-	-moz-animation:    selected-seat 1s infinite;
-	-ms-animation:     selected-seat 1s infinite; 
-	animation: 		   selected-seat 1s infinite;
+	-webkit-animation: selected-genericseatterm 1s infinite;
+	-moz-animation:    selected-genericseatterm 1s infinite;
+	-ms-animation:     selected-genericseatterm 1s infinite; 
+	animation: 		   selected-genericseatterm 1s infinite;
 }
 
 .comment-icon {
@@ -840,7 +840,7 @@ body {
 
 
 
-/*end of seat map rules*/
+/*end of genericseatterm map rules*/
 
 
 
@@ -920,8 +920,8 @@ body {
 /*end of legends rules*/
 
 
-/*seat cart rules*/
-#seat-cart {
+/*genericseatterm cart rules*/
+#genericseatterm-cart {
 	display: none;
 	border-radius: 4px;
 	cursor: pointer;
@@ -1091,10 +1091,10 @@ body {
 	margin-right: 10px;
 }
 
-.seat-taken-notify {
+.genericseatterm-taken-notify {
 	font-size: 20px;
 }
-.seat-bron-notify {
+.genericseatterm-bron-notify {
 	font-size: 20px;
 }
 #confirm-dialog-bottom {
@@ -1140,7 +1140,7 @@ body {
 .confirm-dialog-mob-block {
 	margin-bottom: 10px;
 }
-.add-seat-text h5{
+.add-genericseatterm-text h5{
 	font-size: 18px;
 	font-weight: normal;
 }
@@ -1189,7 +1189,7 @@ body {
 	float: right;
 	text-align: right;
 }
-#seat-cart-rows {
+#genericseatterm-cart-rows {
 	clear: both;
 	overflow: hidden;
 	padding: 10px;
@@ -1201,7 +1201,7 @@ body {
 
 
 
-/*end of seat cart rules*/
+/*end of genericseatterm cart rules*/
 
 
 /*zoom-controller rules*/
@@ -1380,17 +1380,17 @@ body {
 	top: 0;
 	left: 0;
 }
-#seat-cart {
+#genericseatterm-cart {
 	padding: 10px 0;
 }
-#seat-cart-items {
+#genericseatterm-cart-items {
 	margin-bottom: 24px;
 }
-#seat-cart-info {
+#genericseatterm-cart-info {
 	margin-bottom: 12px;
 	font-weight: 700;
 }
-#seat-cart-info p {
+#genericseatterm-cart-info p {
 	font-weight: normal;
 }
 .dialog-box:before {
@@ -1519,7 +1519,7 @@ body {
 	content: "\e600";
 }
 
-.seats-in-cart {
+.genericseatterms-in-cart {
 	font-weight: 700;
 }
 
@@ -1809,7 +1809,7 @@ body {
 		float: left;
 		text-align: center;
 	}
-	#seat-cart-rows {
+	#genericseatterm-cart-rows {
 		clear: both;
 		overflow: hidden;
 		padding: 10px;
@@ -1949,7 +1949,7 @@ body {
 			margin-bottom: 14px;
 		}
 
-		#seat-cart {
+		#genericseatterm-cart {
 			display: block;
 			border: 1px solid #ccc;
 			margin-bottom: 14px;
@@ -1999,14 +1999,14 @@ body {
 		display: none;
 	}
 
-	.seat-cart-left, .seat-cart-right {
+	.genericseatterm-cart-left, .genericseatterm-cart-right {
 		float: none;
 		width: auto;
 		text-align: center;
 	}
 
 
-	#seat-cart .cart-icon {
+	#genericseatterm-cart .cart-icon {
 		display: inline-block;
 		/*position: static;*/
 		margin-top: 10px;
