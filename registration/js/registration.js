@@ -91,14 +91,14 @@
 
 	function SeatReg() {
 		this.rooms = (window.dataReg !== null) ? deepCopyObject(window.dataReg.roomData) : null;
-		this.genericseattermLimit = genericseattermLimit;
+		this.seatLimit = seatLimit;
 		this.currentRoom = 0;
 		this.css3 = false;
 		this.ie8 = false;
 		this.mobileview = true;
 		this.bronSeats = null;
 		this.openSeats = null;
-		this.genericseattermsTotal = null;
+		this.seatsTotal = null;
 		this.takenSeats = null;
 		this.locationObj = {};
 		this.selectedSeats = [];
@@ -116,7 +116,7 @@
 		this.usingSeats = usingSeats === '1';
 		this.usingCalendar = window.usingCalendar === '1' ? true : false;
 		this.enabledCalendarDates = window.calendarDates ? window.calendarDates.split(',') : [];
-		this.spotName =  this.usingSeats ? translator.translate('genericseatterm') : translator.translate('place');
+		this.spotName =  this.usingSeats ? translator.translate('seat') : translator.translate('place');
 		this.activeCalendarDate = window.activeCalendarDate;
 		this.siteLanguage = window.siteLanguage;
 		this.controlledScrollEnabled = window.controlledScroll === '1';
@@ -174,10 +174,10 @@
 	};
 
 	SeatReg.prototype.buildRegistration = function() {
-		//add roomsInfo to genericseattermReg
+		//add roomsInfo to seatReg
 		this.bronSeats = roomsInfo.bronSeats;
 		this.openSeats = roomsInfo.openSeats;
-		this.genericseattermsTotal = roomsInfo.genericseattermsTotal;
+		this.seatsTotal = roomsInfo.seatsTotal;
 		this.takenSeats = roomsInfo.takenSeats;
 
 		for (var property in roomsInfo.roomsInfo) {
@@ -199,10 +199,10 @@
 			var customFieldData = window.registrations[i].hasOwnProperty('custom_field_data') ? window.registrations[i]['custom_field_data'] : '[]';
 			var bookingFullName = window.registrations[i].hasOwnProperty('reg_name') ? window.registrations[i]['reg_name'] : null;
 
-			genericseattermReg.markBookingToRegistration(window.registrations[i]['genericseatterm_id'], window.registrations[i]['room_uuid'], window.registrations[i]['status'], bookingFullName, customFieldData);
+			seatReg.markBookingToRegistration(window.registrations[i]['seat_id'], window.registrations[i]['room_uuid'], window.registrations[i]['status'], bookingFullName, customFieldData);
 		}
 		if(custF != null) {
-			genericseattermReg.fillCustom(custF);
+			seatReg.fillCustom(custF);
 		}
 
 		//fill extra info
@@ -212,17 +212,17 @@
 		$('.total-tak').text(roomsInfo.takenSeats);
 		
 		if(this.mobileview) {
-			genericseattermReg.paintRoomsNav();
-			genericseattermReg.paintRoomInfo();
-			setMiddleSecSize(genericseattermReg.rooms[genericseattermReg.currentRoom].room.width, genericseattermReg.rooms[genericseattermReg.currentRoom].room.height);
-			genericseattermReg.paintRoomLegends();
-			genericseattermReg.paintRoom();
+			seatReg.paintRoomsNav();
+			seatReg.paintRoomInfo();
+			setMiddleSecSize(seatReg.rooms[seatReg.currentRoom].room.width, seatReg.rooms[seatReg.currentRoom].room.height);
+			seatReg.paintRoomLegends();
+			seatReg.paintRoom();
 		}else {
-			genericseattermReg.paintRoomsNav();
-			genericseattermReg.paintRoomInfo();
-			genericseattermReg.paintRoomLegends();
-			setMiddleSecSize(genericseattermReg.rooms[genericseattermReg.currentRoom].room.width, genericseattermReg.rooms[genericseattermReg.currentRoom].room.height);
-			genericseattermReg.paintRoom();
+			seatReg.paintRoomsNav();
+			seatReg.paintRoomInfo();
+			seatReg.paintRoomLegends();
+			setMiddleSecSize(seatReg.rooms[seatReg.currentRoom].room.width, seatReg.rooms[seatReg.currentRoom].room.height);
+			seatReg.paintRoom();
 		}
 	};
 
@@ -328,12 +328,12 @@
 		return roomName;
 	};
 
-	SeatReg.prototype.markBookingToRegistration = function(genericseattermId, roomUuid, status, registrantName, customFieldData) {
+	SeatReg.prototype.markBookingToRegistration = function(seatId, roomUuid, status, registrantName, customFieldData) {
 		var roomLocation = this.locationObj[roomUuid];
 		var boxesLen = this.rooms[roomLocation].boxes.length;
 
 		for(var j = 0; j < boxesLen; j++) {
-			if(this.rooms[roomLocation].boxes[j].id == genericseattermId) {
+			if(this.rooms[roomLocation].boxes[j].id == seatId) {
 				if(status == 1) {
 					this.rooms[roomLocation].boxes[j].status = 'bronRegister';
 				}else {
@@ -399,13 +399,13 @@
 
 			if(loc[i].canRegister == "true") {
 				var prefix = loc[i].hasOwnProperty('prefix') ? loc[i].prefix : '';
-				box.setAttribute('data-genericseatterm', loc[i].id);
-				box.setAttribute('data-genericseatterm-nr', loc[i].genericseatterm);
-				box.setAttribute('data-genericseatterm-prefix', prefix);
+				box.setAttribute('data-seat', loc[i].id);
+				box.setAttribute('data-seat-nr', loc[i].seat);
+				box.setAttribute('data-seat-prefix', prefix);
 				var number = document.createElement('div');
 				
-				number.className = "genericseatterm-number";
-				var newContent = document.createTextNode(prefix + loc[i].genericseatterm);
+				number.className = "seat-number";
+				var newContent = document.createTextNode(prefix + loc[i].seat);
 				number.appendChild(newContent);
 				box.appendChild(number);
 				clickable = true;
@@ -503,14 +503,14 @@
 			documentFragment.appendChild(box);
 		}
 
-		//check if genericseatterm is in cart
+		//check if seat is in cart
 		var arrLen = this.selectedSeats.length;
 		var roomName = this.rooms[this.currentRoom].room.name;
 
 		for(var i = 0; i < arrLen; i++) {
 			if(this.selectedSeats[i].room == roomName) {
 				var selectedSeatId = this.selectedSeats[i].id;
-				var selectedElement = documentFragment.querySelector('.box[data-genericseatterm="' + selectedSeatId + '"]');
+				var selectedElement = documentFragment.querySelector('.box[data-seat="' + selectedSeatId + '"]');
 
 				if(selectedElement) {
 					selectedElement.setAttribute('data-selectedbox','true');
@@ -540,7 +540,7 @@ SeatReg.prototype.paintRoomInfo = function() {
 	var text = this.usingSeats ? translator.translate('openSeatsInRoom_') : translator.translate('openPlacesInRoom_');
 
 	documentFragment.append(
-		'<div class="info-item open-genericseatterms">' + 
+		'<div class="info-item open-seats">' + 
 		'<span>' + 
 		text +
 		'</span>' + 
@@ -603,7 +603,7 @@ SeatReg.prototype.paintRoomsNav = function() {
 			scope.roomChange($(this).attr('data-open'));
 		});
 
-		if(genericseattermReg.currentRoom == i) {
+		if(seatReg.currentRoom == i) {
 			navItem.addClass('active-nav-link');
 		}
 
@@ -661,29 +661,29 @@ SeatReg.prototype.clearCart = function() {
 
 	$('#boxes .box').removeAttr('data-selectedbox');
 	$('#booking-total-price').empty().attr('data-booking-price', 0);
-	$('#genericseatterm-cart-items').empty();
-	$('.genericseatterms-in-cart').text(0);
+	$('#seat-cart-items').empty();
+	$('.seats-in-cart').text(0);
 
 };
 
 SeatReg.prototype.addSeatToCart = function() {
-	//adding selected genericseatterm to genericseatterm cart
-	var genericseattermId = document.getElementById('selected-genericseatterm').value;
-	var genericseattermNr = document.getElementById('selected-genericseatterm-nr').value;
-	var roomName = document.getElementById('selected-genericseatterm-room').value;
+	//adding selected seat to seat cart
+	var seatId = document.getElementById('selected-seat').value;
+	var seatNr = document.getElementById('selected-seat-nr').value;
+	var roomName = document.getElementById('selected-seat-room').value;
 	var roomUUID = document.getElementById('selected-room-uuid').value;
-	var price = parseInt(document.getElementById('selected-genericseatterm-price').value);
+	var price = parseInt(document.getElementById('selected-seat-price').value);
 	var multiPriceUUID = document.getElementById('selected-multi-price-uuid').value;
 	var scope = this;
-	this.selectedSeats.push(new CartItem(genericseattermId, genericseattermNr, roomName, roomUUID, price, multiPriceUUID));
+	this.selectedSeats.push(new CartItem(seatId, seatNr, roomName, roomUUID, price, multiPriceUUID));
 	
-	$('.genericseatterms-in-cart').text(this.selectedSeats.length);
-	var boxColor = $('#boxes .box[data-genericseatterm="' + genericseattermId + '"]').css('background-color');
-	$('#boxes .box[data-genericseatterm="' + genericseattermId + '"]').attr('data-selectedBox','true').css("--animationColor", boxColor).addClass('selected-box');
+	$('.seats-in-cart').text(this.selectedSeats.length);
+	var boxColor = $('#boxes .box[data-seat="' + seatId + '"]').css('background-color');
+	$('#boxes .box[data-seat="' + seatId + '"]').attr('data-selectedBox','true').css("--animationColor", boxColor).addClass('selected-box');
 
-	//add to genericseatterm cart popup
-	var cartItem = $('<div class="cart-item" data-cart-id="' + genericseattermId + '" data-room-uuid="'+ roomUUID +'"></div>');
-	var genericseattermNumberDiv = $('<div class="cart-item-nr">' + genericseattermNr + '</div>');
+	//add to seat cart popup
+	var cartItem = $('<div class="cart-item" data-cart-id="' + seatId + '" data-room-uuid="'+ roomUUID +'"></div>');
+	var seatNumberDiv = $('<div class="cart-item-nr">' + seatNr + '</div>');
 	var roomNameDiv = $('<div class="cart-item-room">' + roomName + '</div>');
 	var delItem = $('<div class="remove-cart-item"><i class="fa fa-times-circle"></i><span style="padding-left:4px">'+ translator.translate('remove') +'</span></div>').on('click', function() {
 		var item = $(this).closest('.cart-item');
@@ -700,34 +700,34 @@ SeatReg.prototype.addSeatToCart = function() {
 			}
 		}
 		item.remove();
-		$('#boxes .box[data-genericseatterm="'+ removeId +'"]').removeAttr('data-selectedbox').removeClass('selected-box');
+		$('#boxes .box[data-seat="'+ removeId +'"]').removeAttr('data-selectedbox').removeClass('selected-box');
 
 		if(scope.selectedSeats.length == 0) {
-			$('#genericseatterm-cart-info').html('<h3>'+ translator.translate('selectionIsEmpty') +'</h3><p>' + translator.translate('youCanAdd_') + scope.spotName + translator.translate('_toCartClickTab') + '</p>');
+			$('#seat-cart-info').html('<h3>'+ translator.translate('selectionIsEmpty') +'</h3><p>' + translator.translate('youCanAdd_') + scope.spotName + translator.translate('_toCartClickTab') + '</p>');
 			$('#checkout').css('display','none');
-			$('#genericseatterm-cart-rows').css('display','none');
+			$('#seat-cart-rows').css('display','none');
 			$('#booking-total-price').empty().attr('data-booking-price', 0);
 		}else {
 			var selected = scope.selectedSeats.length;
 			var infoText;
 
 			if( selected > 1 ) {
-				infoText = selected + (this.usingSeats ? translator.translate('_genericseattermsSelected') : translator.translate('_placesSelected') );
+				infoText = selected + (this.usingSeats ? translator.translate('_seatsSelected') : translator.translate('_placesSelected') );
 			}else {
-				infoText = selected + (this.usingSeats ? translator.translate('_genericseattermSelected') : translator.translate('_placeSelected') );
+				infoText = selected + (this.usingSeats ? translator.translate('_seatSelected') : translator.translate('_placeSelected') );
 			}
-			$('#genericseatterm-cart-info').text(infoText);
+			$('#seat-cart-info').text(infoText);
 			var totalPrice = scope.selectedSeats.reduce(function(accumulator, currentValue) {
 				return currentValue.price + accumulator;
 			}, 0);
 			$('#booking-total-price').text( translator.translate('bookingTotalCostIs_') + getCurrencySymbolFromISO(scope.payPalCurrencyCode) + totalPrice);
 			$('#booking-total-price').attr('data-booking-price', totalPrice);
 		}
-		$('.genericseatterms-in-cart').text(scope.selectedSeats.length);
+		$('.seats-in-cart').text(scope.selectedSeats.length);
 	});
 
-	cartItem.append(genericseattermNumberDiv, roomNameDiv, delItem);
-	$('#genericseatterm-cart-items').append(cartItem);
+	cartItem.append(seatNumberDiv, roomNameDiv, delItem);
+	$('#seat-cart-items').append(cartItem);
 	
 	var totalPrice = scope.selectedSeats.reduce(function(accumulator, currentValue) {
 		return currentValue.price + accumulator;
@@ -750,37 +750,37 @@ SeatReg.prototype.openSeatCart = function() {
 
 	if(selected == 0) {	
 		if(this.requireWPLogin && !this.isLoggedIn) {
-			$('#genericseatterm-cart-info').html('<h3>'+ translator.translate('wpLoginRequired') +'</h3>');
+			$('#seat-cart-info').html('<h3>'+ translator.translate('wpLoginRequired') +'</h3>');
 		}else if( this.status == 'run' && !this.hasFailedTimeRestrictions() ) {
-			$('#genericseatterm-cart-info').html('<h3>'+ cartHeaderText +'</h3><p>' + cartEmptyText + '</p>');
+			$('#seat-cart-info').html('<h3>'+ cartHeaderText +'</h3><p>' + cartEmptyText + '</p>');
 			$('#checkout').css('display','none');
-			$('#genericseatterm-cart-rows').css('display','none');
+			$('#seat-cart-rows').css('display','none');
 		}else {
-			$('#genericseatterm-cart-info').html('<h3>'+ translator.translate('regClosedAtMoment') +'</h3>');
+			$('#seat-cart-info').html('<h3>'+ translator.translate('regClosedAtMoment') +'</h3>');
 		}
 
 	}else {
-		$('#genericseatterm-cart-rows').css('display','block');
+		$('#seat-cart-rows').css('display','block');
 		var infoText;
 
 		if(selected > 1) {
-			infoText = selected + ( this.usingSeats ? translator.translate('_genericseattermsSelected') : translator.translate('_placesSelected') );
+			infoText = selected + ( this.usingSeats ? translator.translate('_seatsSelected') : translator.translate('_placesSelected') );
 		}else {
-			infoText = selected + translator.translate('_genericseattermSelected');
-			infoText = selected + ( this.usingSeats ? translator.translate('_genericseattermSelected') : translator.translate('_placeSelected') );
+			infoText = selected + translator.translate('_seatSelected');
+			infoText = selected + ( this.usingSeats ? translator.translate('_seatSelected') : translator.translate('_placeSelected') );
 		}
-		$('#genericseatterm-cart-info').text(infoText);
+		$('#seat-cart-info').text(infoText);
 		$('#checkout').css('display','inline-block');
 	}
 
-	$('#genericseatterm-cart-popup .cart-popup-inner').addClass('zoomIn');
-	$('#genericseatterm-cart-popup').css('display','block');
+	$('#seat-cart-popup .cart-popup-inner').addClass('zoomIn');
+	$('#seat-cart-popup').css('display','block');
 	$('#modal-bg').css('display','block');
 };
 
 SeatReg.prototype.closeSeatCart = function() {
-	$('#genericseatterm-cart-popup .cart-popup-inner').removeClass('zoomIn');
-	$('#genericseatterm-cart-popup').css('display','none');
+	$('#seat-cart-popup .cart-popup-inner').removeClass('zoomIn');
+	$('#seat-cart-popup').css('display','none');
 	$('#modal-bg').css('display','none');
 };
 
@@ -791,7 +791,7 @@ SeatReg.prototype.openCheckOut = function() {
 		return;
 	}
 
-	$('#genericseatterm-cart-popup').css('display','none');
+	$('#seat-cart-popup').css('display','none');
 	this.generateCheckout(arrLen);
 	$('#checkout-area').css('display','block');
 	$('#modal-bg').css('display','block');
@@ -835,8 +835,8 @@ SeatReg.prototype.generateCheckout = function(arrLen) {
 			documentFragment2.append(field);
 		}
 
-		var genericseattermId = $('<input type="hidden" class="item-id" name="item-id[]" value="' + this.selectedSeats[i].id + '" />');
-		var genericseattermNr = $('<input type="hidden" class="item-nr" name="item-nr[]" value="' + this.selectedSeats[i].nr + '" />');
+		var seatId = $('<input type="hidden" class="item-id" name="item-id[]" value="' + this.selectedSeats[i].id + '" />');
+		var seatNr = $('<input type="hidden" class="item-nr" name="item-nr[]" value="' + this.selectedSeats[i].nr + '" />');
 		var roomUUID = $('<input type="hidden" name="room-uuid[]" value="' + this.selectedSeats[i].roomUUID + '" />');
 		var multiPriceUUID = $('<input type="hidden" name="multi-price-uuid[]" value="' + this.selectedSeats[i].multiPriceUUID + '" />');
 		var selectedCalendarDate = null;
@@ -845,7 +845,7 @@ SeatReg.prototype.generateCheckout = function(arrLen) {
 			selectedCalendarDate = $('<input type="hidden" name="selected-calendar-date" value="' + this.activeCalendarDate + '" />');
 		}
 
-		checkItem.append(checkItemHeader, documentFragment2, genericseattermId, genericseattermNr, roomUUID, multiPriceUUID, selectedCalendarDate);
+		checkItem.append(checkItemHeader, documentFragment2, seatId, seatNr, roomUUID, multiPriceUUID, selectedCalendarDate);
 		documentFragment.append(checkItem);
 	}
 
@@ -955,9 +955,9 @@ SeatReg.prototype.paintSeatDialog = function(clickBox) {
 
 	var hover = null;
 	var legend = null;
-	var nr = clickBox.getAttribute('data-genericseatterm-nr');
-	var genericseattermPrefix = clickBox.getAttribute('data-genericseatterm-prefix');
-	var genericseattermId = clickBox.getAttribute('data-genericseatterm'); 
+	var nr = clickBox.getAttribute('data-seat-nr');
+	var seatPrefix = clickBox.getAttribute('data-seat-prefix');
+	var seatId = clickBox.getAttribute('data-seat'); 
 	var isLocked = clickBox.getAttribute('data-lock') === "true";
 	var passwordNeeded = clickBox.getAttribute('data-password') === "true";
 	var type = 'box';
@@ -978,13 +978,13 @@ SeatReg.prototype.paintSeatDialog = function(clickBox) {
 		showDialog = true;
 	}
 	
-	if(clickBox.hasAttribute('data-genericseatterm')) {
-		$('#selected-genericseatterm').val(clickBox.getAttribute('data-genericseatterm'));
-		$('#selected-genericseatterm-room').val(currentRoom.name);
+	if(clickBox.hasAttribute('data-seat')) {
+		$('#selected-seat').val(clickBox.getAttribute('data-seat'));
+		$('#selected-seat-room').val(currentRoom.name);
 		$('#selected-room-uuid').val(currentRoom.uuid);
 		type = 'rbox';
 	
-		$('#selected-genericseatterm-nr').val(genericseattermPrefix + nr);
+		$('#selected-seat-nr').val(seatPrefix + nr);
 		showDialog = true;
 	}
 
@@ -1023,51 +1023,51 @@ SeatReg.prototype.paintSeatDialog = function(clickBox) {
 	if(type != 'box') {
 		if(!isSelected) {
 			if(isLocked) {
-				var text = this.usingSeats ? translator.translate('genericseattermIsLocked') : translator.translate('placeIsLocked');
+				var text = this.usingSeats ? translator.translate('seatIsLocked') : translator.translate('placeIsLocked');
 
 				$('#confirm-dialog-bottom').empty();
-				$('#confirm-dialog-mob-text').html('<div class="genericseatterm-taken-notify">' + text + '</div>');
-			}else if(passwordNeeded && !this.enteredSeatPasswords.hasOwnProperty(genericseattermId)) {
+				$('#confirm-dialog-mob-text').html('<div class="seat-taken-notify">' + text + '</div>');
+			}else if(passwordNeeded && !this.enteredSeatPasswords.hasOwnProperty(seatId)) {
 				$('#confirm-dialog-bottom').empty();
-				$('#confirm-dialog-mob-text').html('<div class="genericseatterm-taken-notify">'+ translator.translate('pleaseEnterPassword') + '</div>' + 
-					'<div class="box-password-wrap"><input type="text" id="genericseatterm-password" /> ' +
+				$('#confirm-dialog-mob-text').html('<div class="seat-taken-notify">'+ translator.translate('pleaseEnterPassword') + '</div>' + 
+					'<div class="box-password-wrap"><input type="text" id="seat-password" /> ' +
 					'<div class="seatreg-btn green-btn" id="password-check">Ok</div></div>' +
 					'<div id="password-error" class="d-none" style="color:red">'+ translator.translate('passwordNotCorrect') +'</div>' + 
 					'<div id="password-check-loader" class="d-none">'+ '<img alt="Loading..." src="'+ WP_Seatreg.plugin_dir_url + 'img/ajax_loader_small.gif' +'" />' +'</div>');
-			}else if(type == 'rbox' && this.selectedSeats.length < this.genericseattermLimit ) {
+			}else if(type == 'rbox' && this.selectedSeats.length < this.seatLimit ) {
 
 				if( this.requireWPLogin && !this.isLoggedIn ) {
 					var text = translator.translate('wpLoginRequired');
 	
 					$('#confirm-dialog-bottom').empty();
-					$('#confirm-dialog-mob-text').html('<div class="genericseatterm-taken-notify">' + text + '</div>');
+					$('#confirm-dialog-mob-text').html('<div class="seat-taken-notify">' + text + '</div>');
 				}else if( this.status == 'run' && !this.hasFailedTimeRestrictions() ) {
 					var maxPlacesText = this.usingSeats ? translator.translate('maxSeatsToAdd') : translator.translate('maxPlacesToAdd');
 					
-					$('#confirm-dialog-mob-text').html('<div class="add-genericseatterm-text"><h5>'+ translator.translate('add_') + ' ' + this.spotName + ' ' + genericseattermPrefix + nr + translator.translate('_fromRoom_') + ' ' + room + translator.translate('_toSelection') +'</h5><p>'+ maxPlacesText + ' ' + this.genericseattermLimit +'</p>' + '</div>');
+					$('#confirm-dialog-mob-text').html('<div class="add-seat-text"><h5>'+ translator.translate('add_') + ' ' + this.spotName + ' ' + seatPrefix + nr + translator.translate('_fromRoom_') + ' ' + room + translator.translate('_toSelection') +'</h5><p>'+ maxPlacesText + ' ' + this.seatLimit +'</p>' + '</div>');
 
 					if(this.isPaymentEnabled() && this.payPalCurrencyCode && price > 0) {
-						var placeCostText = this.usingSeats ? translator.translate('genericseattermCosts_') : translator.translate('placeCosts_');
+						var placeCostText = this.usingSeats ? translator.translate('seatCosts_') : translator.translate('placeCosts_');
 
-						$('#confirm-dialog-mob-text .add-genericseatterm-text').append('<p>' + placeCostText + '<strong>' +  getCurrencySymbolFromISO(this.payPalCurrencyCode) + price + '</strong></p>');
+						$('#confirm-dialog-mob-text .add-seat-text').append('<p>' + placeCostText + '<strong>' +  getCurrencySymbolFromISO(this.payPalCurrencyCode) + price + '</strong></p>');
 					}
 				}else {
-					$('#confirm-dialog-mob-text').html('<div class="add-genericseatterm-text"><h5>' + this.spotName + ' ' + nr + translator.translate('_fromRoom_')  + room + '</h5></div>');
+					$('#confirm-dialog-mob-text').html('<div class="add-seat-text"><h5>' + this.spotName + ' ' + nr + translator.translate('_fromRoom_')  + room + '</h5></div>');
 				}
 
 			}else if(type == 'tak') {
 				$('#confirm-dialog-bottom').empty();
-				$('#confirm-dialog-mob-text').html('<div class="genericseatterm-taken-notify"><h5>'+ translator.translate('this_') + this.spotName + translator.translate('_isOccupied') + '</h5></div>');
+				$('#confirm-dialog-mob-text').html('<div class="seat-taken-notify"><h5>'+ translator.translate('this_') + this.spotName + translator.translate('_isOccupied') + '</h5></div>');
 			}else if(type == 'bron') {
 				$('#confirm-dialog-bottom').empty();
-				$('#confirm-dialog-mob-text').html('<div class="genericseatterm-bron-notify"><h5>' + translator.translate('this_') +  ' ' + this.spotName + translator.translate('_isPendingState') +'</h5>'+ translator.translate('regOwnerNotConfirmed') +'</div>');
-			}else if(type == 'rbox' && this.selectedSeats.length >= this.genericseattermLimit ) {
+				$('#confirm-dialog-mob-text').html('<div class="seat-bron-notify"><h5>' + translator.translate('this_') +  ' ' + this.spotName + translator.translate('_isPendingState') +'</h5>'+ translator.translate('regOwnerNotConfirmed') +'</div>');
+			}else if(type == 'rbox' && this.selectedSeats.length >= this.seatLimit ) {
 				$('#confirm-dialog-bottom').empty();
-				$('#confirm-dialog-mob-text').html('<div class="genericseatterm-taken-notify">'+ translator.translate('selectionIsFull') +'</div>');
+				$('#confirm-dialog-mob-text').html('<div class="seat-taken-notify">'+ translator.translate('selectionIsFull') +'</div>');
 			}
 		}else {
 			$('#confirm-dialog-bottom').empty();
-			$('#confirm-dialog-mob-text').html('<div class="add-genericseatterm-text"><h5>' + capitalizeFirstLetter(this.spotName)  + ' ' + nr + translator.translate('_isAlreadySelected') +'</h5></div>');
+			$('#confirm-dialog-mob-text').html('<div class="add-seat-text"><h5>' + capitalizeFirstLetter(this.spotName)  + ' ' + nr + translator.translate('_isAlreadySelected') +'</h5></div>');
 		}	
 	}
 	if(showDialog) {
@@ -1077,17 +1077,17 @@ SeatReg.prototype.paintSeatDialog = function(clickBox) {
 	}
 };
 
-SeatReg.prototype.addEnteredSeatPassword = function(genericseattermId, password) {
-	this.enteredSeatPasswords[genericseattermId] = password;
+SeatReg.prototype.addEnteredSeatPassword = function(seatId, password) {
+	this.enteredSeatPasswords[seatId] = password;
 };
 
 /*Turning on lights*/
-var genericseattermReg = new SeatReg();
-genericseattermReg.init();
+var seatReg = new SeatReg();
+seatReg.init();
 
 $(window).resize(function() {
 		rtime = new Date();
-	    if (timeout === false && genericseattermReg.rooms) {
+	    if (timeout === false && seatReg.rooms) {
 	        timeout = true;
 	        setTimeout(resizeend, delta);
 	    }
@@ -1102,16 +1102,16 @@ function resizeend() {
   		screenHeight = $(window).height();
 
   		if(screenWidth > 1024) {
-			genericseattermReg.mobileview = false;
+			seatReg.mobileview = false;
 			  
   			if($('#room-nav').hasClass('modal')) {
   				$('#room-nav').removeClass('modal');
   				$('#modal-bg').css('display','none');
   			}
   		}else {
-  			genericseattermReg.mobileview = true;		
+  			seatReg.mobileview = true;		
   		}
-  		setMiddleSecSize(genericseattermReg.rooms[genericseattermReg.currentRoom].room.width, genericseattermReg.rooms[genericseattermReg.currentRoom].room.height);
+  		setMiddleSecSize(seatReg.rooms[seatReg.currentRoom].room.width, seatReg.rooms[seatReg.currentRoom].room.height);
   		if(legendScroll != null) {
 			legendScroll.destroy();
 			legendScroll= null;
@@ -1126,7 +1126,7 @@ function setMiddleSecSize(roomSizeWidth, roomSizeHeight) {
 	var poweredByHeight = $('#powered-by').outerHeight(true);
 	var cartWidth = $('#controls-wrapper').outerWidth(true);
 	var legendWidth = 0;
-	var spaceForMiddleWidth = screenWidth - 20; //how much room for genericseatterm map
+	var spaceForMiddleWidth = screenWidth - 20; //how much room for seat map
 	var spaceForMiddleHeight = screenHeight - 30 - 70 - navHeight - $('#bottom-wrapper').outerHeight(true) - $('#zoom-controller').outerHeight(true);  // - header height, -legend height, navbar height, -spacing  --default mobile
 	var needHorizScroll = false;
 	var needVerticScroll = false;
@@ -1134,7 +1134,7 @@ function setMiddleSecSize(roomSizeWidth, roomSizeHeight) {
 	$('#middle-section').css('margin-left','');
 
 	if(screenWidth >= 1024) {
-		//ok i have bigger screen. set legends area left and genericseattermcart right
+		//ok i have bigger screen. set legends area left and seatcart right
 		
 		if($('#legend-wrapper').is(':visible')) {
 			legendWidth = $('#legend-wrapper').outerWidth(true);
@@ -1149,7 +1149,7 @@ function setMiddleSecSize(roomSizeWidth, roomSizeHeight) {
 
 		spaceForMiddleHeight = screenHeight - 30 - navHeight - infoHeight - 30 - poweredByHeight;  //- header height, - navbar height, -footer if needed
 
-		if(genericseattermReg.rooms[genericseattermReg.currentRoom].room.legends.length > 0) {
+		if(seatReg.rooms[seatReg.currentRoom].room.legends.length > 0) {
 			$('#legend-wrapper').css('display','inline-block');
 		}
 
@@ -1190,12 +1190,12 @@ function setMiddleSecSize(roomSizeWidth, roomSizeHeight) {
 	$('#box-wrap').attr('data-sec-size', $('#box-wrap').css('width'));
 
 	//init iScroll
-	initScroll(needHorizScroll, needVerticScroll);  //for genericseatterm map
+	initScroll(needHorizScroll, needVerticScroll);  //for seat map
 }
 
 function initLegendsScroll() {
 	if(screenWidth < 1024) {
-		if(genericseattermReg.ie8 == false) {
+		if(seatReg.ie8 == false) {
 		}
 	}else {
 		$('#legend-wrapper').css('max-height',"");
@@ -1206,7 +1206,7 @@ function initScroll(needHorizScroll, needVerticScroll) {
 
 	$('#box-wrap').off('mousewheel DOMMouseScroll').on('mousewheel DOMMouseScroll', function(e) {
 		//if ctrl scroll enabled prevent scroll without ctrl down
-		if( genericseattermReg.controlledScrollEnabled && !zKeyDown ) {
+		if( seatReg.controlledScrollEnabled && !zKeyDown ) {
 			e.stopPropagation();
 
 			if( !showingAlertNotification() ) {
@@ -1224,11 +1224,11 @@ function initScroll(needHorizScroll, needVerticScroll) {
 	//do i need to zoom out?
 	var needToZoom = false;
 
-	if(genericseattermReg.rooms[genericseattermReg.currentRoom].room.width > $('#middle-section').width() || genericseattermReg.rooms[genericseattermReg.currentRoom].room.height > $('#middle-section').height()) {
+	if(seatReg.rooms[seatReg.currentRoom].room.width > $('#middle-section').width() || seatReg.rooms[seatReg.currentRoom].room.height > $('#middle-section').height()) {
 		needToZoom = true;
 	}
 
-	if(myScroll == null && genericseattermReg.ie8 == false) {
+	if(myScroll == null && seatReg.ie8 == false) {
 			myScroll = new IScroll('#box-wrap', {
 				keyBindings: true,
 				scrollbars: true,
@@ -1269,7 +1269,7 @@ function zoomStart() {
 }
 
 function boxWrapSize(fitF) {
-	var w = genericseattermReg.rooms[genericseattermReg.currentRoom].room.width * fitF;
+	var w = seatReg.rooms[seatReg.currentRoom].room.width * fitF;
 
 	if(w < parseInt($('#box-wrap').data('sec-size'))) {
 
@@ -1286,8 +1286,8 @@ function boxWrapSize(fitF) {
 function fitFactor(){
 	    //compute witch dimension is larger width vs height
 
-	    var w = genericseattermReg.rooms[genericseattermReg.currentRoom].room.width / ($('#middle-section').width() - 20);
-	    var h = genericseattermReg.rooms[genericseattermReg.currentRoom].room.height / ($('#middle-section').height() - 20);
+	    var w = seatReg.rooms[seatReg.currentRoom].room.width / ($('#middle-section').width() - 20);
+	    var h = seatReg.rooms[seatReg.currentRoom].room.height / ($('#middle-section').height() - 20);
 	    //h = content.H / wrap.H;//zoom factor for height
 	    //w = content.W/ wrap.W;//zoom factor for width
 	    //get max between zoom factores, remove percents
@@ -1334,7 +1334,7 @@ function validateInput(inputField) {
 			break;
 		case 'Email':
 			var useThis = emailReg;
-			if(genericseattermReg.gmailNeeded == 1) {
+			if(seatReg.gmailNeeded == 1) {
 				useThis = gmailReg;
 			}
 
@@ -1400,10 +1400,10 @@ function sendData(customFieldBack, registrationCode) {
 	$('#checkoput-area-inner .ajax-load').css('display','inline-block');
 
 	var mailToSend = null;
-	var genericseattermPasswords = JSON.stringify(genericseattermReg.enteredSeatPasswords);
+	var seatPasswords = JSON.stringify(seatReg.enteredSeatPasswords);
 	customFieldBack = JSON.stringify(customFieldBack);
 
-	if(genericseattermReg.selectedSeats.length > 1) {
+	if(seatReg.selectedSeats.length > 1) {
 		mailToSend = $('#prim-mail').val();
 	}else {
 		mailToSend = $('#checkout-input-area .check-item').first().find('.field-input[data-field="Email"]').val();
@@ -1412,7 +1412,7 @@ function sendData(customFieldBack, registrationCode) {
 	$.ajax({
 		type: 'POST',
 		url: ajaxUrl,
-		data: $('#checkoput-area-inner').serialize() + '&custom=' + encodeURIComponent(customFieldBack) +'&action=' + 'seatreg_booking_submit' + '&c=' + registrationCode + '&em=' + mailToSend + '&pw=' + $('#sub-pwd').val() + '&passwords=' + encodeURIComponent(genericseattermPasswords),
+		data: $('#checkoput-area-inner').serialize() + '&custom=' + encodeURIComponent(customFieldBack) +'&action=' + 'seatreg_booking_submit' + '&c=' + registrationCode + '&em=' + mailToSend + '&pw=' + $('#sub-pwd').val() + '&passwords=' + encodeURIComponent(seatPasswords),
 		success: function(data) {
 			var is_JSON = true;
 			
@@ -1422,7 +1422,7 @@ function sendData(customFieldBack, registrationCode) {
 				is_JSON = false;
 			}
 			if(is_JSON) {
-				if( resp.type == 'ok' && genericseattermReg.bookingRedirectToStatusPage && !genericseattermReg.emailConfirmEnabled) {
+				if( resp.type == 'ok' && seatReg.bookingRedirectToStatusPage && !seatReg.emailConfirmEnabled) {
 					window.location.href = resp.data;
 					return;
 				}
@@ -1498,10 +1498,10 @@ function bookingsConfirmedInfo(data, status) {
 		var bookingTotalPrice = parseInt($('#booking-total-price').attr('data-booking-price'));
 
 		$('.booking-confirmed-header').text(translator.translate('bookingsConfirmedPending'));
-		if( genericseattermReg.isPaymentEnabled() && bookingTotalPrice > 0) {
+		if( seatReg.isPaymentEnabled() && bookingTotalPrice > 0) {
 			$('#booking-confirmed-text').text(translator.translate('payForBookingLink'));
 		}
-		if ( !genericseattermReg.NotifyBookerPendingBooking ) { $('#should-receive-update-email-text').css('display','none'); }
+		if ( !seatReg.NotifyBookerPendingBooking ) { $('#should-receive-update-email-text').css('display','none'); }
 	}else if (status === 2) {
 		$('#should-receive-update-email-text').css('display', 'none');
 		
@@ -1523,33 +1523,33 @@ function sanitizeClassName(inputString) {
 }
 
 $('#room-nav-btn').on('click', function() {	
-	genericseattermReg.openModel();
+	seatReg.openModel();
 });
 
 $('#close-modal').on('click', function() {
-	genericseattermReg.closeModal();
+	seatReg.closeModal();
 });
 
-$('#genericseatterm-cart, .mobile-cart').on('click', function() {
-	genericseattermReg.openSeatCart();
+$('#seat-cart, .mobile-cart').on('click', function() {
+	seatReg.openSeatCart();
 });
 
 $('#dialog-close-btn').on('click', function() {
-	genericseattermReg.closeSeatDialog();
+	seatReg.closeSeatDialog();
 });
 
 $('#confirm-dialog-bottom').on('click', '.add-to-cart', function() {
-	$('#selected-genericseatterm-price').val( $(this).data('price') );
+	$('#selected-seat-price').val( $(this).data('price') );
 	$('#selected-multi-price-uuid').val( $(this).data('price-uuid') || '' );
-	genericseattermReg.addSeatToCart();
+	seatReg.addSeatToCart();
 });
 
 $('#room-nav-close').on('click', function() {
-	genericseattermReg.closeModal();
+	seatReg.closeModal();
 });
 
 $('#checkout').on('click', function() {
-	genericseattermReg.openCheckOut();
+	seatReg.openCheckOut();
 });
 
 $('#checkout-input-area').on('keyup change input','.field-input', function() {
@@ -1573,8 +1573,8 @@ $('.refresh-btn').on('click', function() {
 });
 
 $('#confirm-dialog-mob-text').on('click', '#password-check', function() {
-	var genericseattermId = $('#selected-genericseatterm').val();
-	var password = $('#genericseatterm-password').val();
+	var seatId = $('#selected-seat').val();
+	var password = $('#seat-password').val();
 
 	$('#password-error').addClass('d-none');
 	$('#password-check-loader').removeClass('d-none');
@@ -1583,17 +1583,17 @@ $('#confirm-dialog-mob-text').on('click', '#password-check', function() {
 		type: 'POST',
 		url: ajaxUrl,
 		data: {
-			action: 'seatreg_genericseatterm_password_check',
-			password: $('#genericseatterm-password').val(),
+			action: 'seatreg_seat_password_check',
+			password: $('#seat-password').val(),
 			'registration-code': qs['c'],
-			'genericseatterm-id': genericseattermId
+			'seat-id': seatId
 		},
 		success: function(data) {
 			$('#password-check-loader').addClass('d-none');
 
 			if(data.success) {
-				genericseattermReg.addEnteredSeatPassword(genericseattermId, password);
-				genericseattermReg.openSeatDialog($('.box[data-genericseatterm='+ genericseattermId +']')[0]);
+				seatReg.addEnteredSeatPassword(seatId, password);
+				seatReg.openSeatDialog($('.box[data-seat='+ seatId +']')[0]);
 			}else {
 				$('#password-error').removeClass('d-none');
 			}
@@ -1646,7 +1646,7 @@ $('#login-notify .close-btn').on('click', function() {
 });
 
 $('.room-nav-extra-info-btn, #main-header').on('click', function() {
-	genericseattermReg.openInfo();
+	seatReg.openInfo();
 });
 
 $('.mobile-legend').on('click', function() {
@@ -1692,7 +1692,7 @@ $('.move-action').on('click', function() {
 				break;
 
 			case 'down':
-				var roomHeight = genericseattermReg.rooms[genericseattermReg.currentRoom].room[5];
+				var roomHeight = seatReg.rooms[seatReg.currentRoom].room[5];
 				myScroll.scrollBy(0, -100);
 
 				break;

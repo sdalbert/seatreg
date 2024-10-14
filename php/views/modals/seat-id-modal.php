@@ -1,4 +1,4 @@
-<div class="modal fade genericseatterm-id-modal" id="genericseatterm-id-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade seat-id-modal" id="seat-id-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -12,34 +12,34 @@
 				?>
 				<h5><?php echo $roomData->room->name; ?></h5>
 
-				<div class="genericseatterm-id-grid">
+				<div class="seat-id-grid">
 					<div class="grid-title"><?php esc_html_e('No.', 'seatreg'); ?></div>
 					<div class="grid-title"><?php esc_html_e('ID', 'seatreg'); ?></div>
 					<div class="grid-title"><?php esc_html_e('Action', 'seatreg'); ?></div>
 
 					<?php foreach($roomData->boxes as $box): ?>
 						<?php 
-							$genericseattermNumber = $box->prefix . $box->genericseatterm;
+							$seatNumber = $box->prefix . $box->seat;
 						?>
 						<?php if($box->canRegister === 'true' && !in_array($box->id, $bookingIds)): ?>
 							<?php 
 								$openSeatCounter++;
 							?>
 							<div>
-								<?php echo $genericseattermNumber; ?>
+								<?php echo $seatNumber; ?>
 							</div>
 							<div>
 								<?php echo $box->id; ?>
 							</div>
 
-							<button class="btn btn-outline-secondary btn-sm" data-action="select-id" data-genericseatterm-id="<?php echo esc_attr($box->id); ?>">
+							<button class="btn btn-outline-secondary btn-sm" data-action="select-id" data-seat-id="<?php echo esc_attr($box->id); ?>">
 								<?php echo esc_html('Select ID', 'seatreg'); ?>
 							</button>
 						<?php endif; ?>
 					<?php endforeach; ?>
 				</div>
 				<?php if($openSeatCounter === 0): ?>
-					<div class="alert alert-info"><?php echo sprintf(esc_html('No open genericseatterms in %s', 'seatreg'), $roomData->room->name); ?></div>
+					<div class="alert alert-info"><?php echo sprintf(esc_html('No open seats in %s', 'seatreg'), $roomData->room->name); ?></div>
 				<?php endif; ?>
 			<?php endforeach; ?>
       </div>

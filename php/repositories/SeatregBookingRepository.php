@@ -277,7 +277,7 @@ class SeatregBookingRepository {
 
         if( $calendarDateFilter ) {
             $bookings = $wpdb->get_results( $wpdb->prepare(
-                "SELECT genericseatterm_id, room_uuid, status, custom_field_data, CONCAT(first_name, ' ', last_name) AS reg_name 
+                "SELECT seat_id, room_uuid, status, custom_field_data, CONCAT(first_name, ' ', last_name) AS reg_name 
                 FROM $seatreg_db_table_names->table_seatreg_bookings
                 WHERE registration_code = %s
                 AND (status = '1' OR status = '2')
@@ -287,7 +287,7 @@ class SeatregBookingRepository {
             ) );
         }else {
             $bookings = $wpdb->get_results( $wpdb->prepare(
-                "SELECT genericseatterm_id, room_uuid, status, custom_field_data, CONCAT(first_name, ' ', last_name) AS reg_name 
+                "SELECT seat_id, room_uuid, status, custom_field_data, CONCAT(first_name, ' ', last_name) AS reg_name 
                 FROM $seatreg_db_table_names->table_seatreg_bookings
                 WHERE registration_code = %s
                 AND (status = '1' OR status = '2')

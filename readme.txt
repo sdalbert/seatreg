@@ -1,6 +1,6 @@
 === SeatReg ===
 Donate link: https://www.paypal.com/donate?hosted_button_id=9QSGHYKHL6NMU&source=url
-Tags: genericseatterm registration, booking genericseatterms, booking events, genericseatterm map, booking management
+Tags: seat registration, booking seats, booking events, seat map, booking management
 Requires at least: 5.3
 Requires PHP: 7.2.28
 Tested up to: 6.6
@@ -17,7 +17,7 @@ Create and manage online registrations with ease. Design your own registration s
 
 SeatReg is a plugin that offers the following and more to build and manage online registrations.
  
-* Map Builder: Design your registration scheme with a versatile map builder. Easily create, delete, resize, and move elements. Add prices, legends, genericseatterm numbers, hover text, customize colors, and more.
+* Map Builder: Design your registration scheme with a versatile map builder. Easily create, delete, resize, and move elements. Add prices, legends, seat numbers, hover text, customize colors, and more.
 * Registration Overview: Get a overview of your registrations. Track the number of open, approved, or pending bookings.
 * Customizable Settings: Control the booking flow with numerous settings. Create custom fields to collect additional data from customers.
 * Email Templates: Utilize customizable email templates.
@@ -59,7 +59,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Fixed Stripe payment issue when charge.failed event happens. 
 
 = 1.53.0 =
-* Added option to limit how many total genericseatterms can user make across all their bookings.
+* Added option to limit how many total seats can user make across all their bookings.
 * Fix user limit check. 
 
 = 1.52.0 =
@@ -70,7 +70,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Added auto page refresh to booking status page when page regains focus.
 
 = 1.51.0 =
-* Added booking genericseatterm price to booking manager and also to PDF, XLSX and text files.
+* Added booking seat price to booking manager and also to PDF, XLSX and text files.
 * Open payment gateways in separate tab in booking status page. Prevents issues when using shortcode.
 
 = 1.50.1 =
@@ -100,17 +100,17 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 
 = 1.48.3 =
 * Copy more settings when copying registration.
-* Fixed issue where genericseatterm price was not showing in booking confirmation modal when using only custom payments.
+* Fixed issue where seat price was not showing in booking confirmation modal when using only custom payments.
 
 = 1.48.2 =
-* ID lookup for add booking (booking manager) now displays only open genericseatterms.
+* ID lookup for add booking (booking manager) now displays only open seats.
 
 = 1.48.1 =
 * Fixed issue with booking manager actions with calendar mode
 
 = 1.48.0 =
 * Added option to configure booking notification email.
-* CSS classes for styling legends and selected genericseatterms in registration page.
+* CSS classes for styling legends and selected seats in registration page.
 * Using selected WordPress timezone to display dates.
 
 = 1.47.0 =
@@ -136,7 +136,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Custom payment icons added.
 
 = 1.42.0 =
-* Seat ID lookup can now fill genericseatterm ID.
+* Seat ID lookup can now fill seat ID.
 * Room name selection for add booking in booking manager.
 * Changed registration background image locations. Will fix issue where plugin update deleted existing background images.
 
@@ -146,7 +146,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Smaller fixes/improvements.
 
 = 1.40.0 =
-* Added option to customize button text that opens genericseatterm selection in registration view.
+* Added option to customize button text that opens seat selection in registration view.
 * Registration view now displays currency symbols instead of currency code.
 
 = 1.39.4 =
@@ -187,12 +187,12 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 
 = 1.35.0 =
 * Added custom payments option.
-* Added genericseatterm prefix to genericseatterm ID lookup modal.
+* Added seat prefix to seat ID lookup modal.
 
 = 1.34.0 =
-* Added genericseatterm ID lookup modal for booking manager.
+* Added seat ID lookup modal for booking manager.
 * Added controlled scroll feature to registration view.
-* Changed genericseatterm number field size in DB.
+* Changed seat number field size in DB.
 
 = 1.33.0 =
 * Added calendar mode.
@@ -215,7 +215,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Added option to make text custom field unique.
 
 = 1.31.1 =
-* Fixed issue where locked genericseatterm text was not showing.
+* Fixed issue where locked seat text was not showing.
 
 = 1.31.0 =
 * Added option to set FROM email address for SeatReg system related emails.
@@ -224,10 +224,10 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Fixed DB table issue caused by multi price selection.
 
 = 1.30.0 =
-* Added possibility to add multiple prices to genericseatterm.
+* Added possibility to add multiple prices to seat.
 
 = 1.29.4 =
-* Fixed issue that was caused when creating a genericseatterm outside of builder grid.
+* Fixed issue that was caused when creating a seat outside of builder grid.
 
 = 1.29.3 =
 * Allow space character usage in bookings.
@@ -237,23 +237,23 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Fixed issue with older PHP version (trailing comma).
 
 = 1.29.1 =
-* Fixed issue with custom genericseatterm numbers in scheme editor.
+* Fixed issue with custom seat numbers in scheme editor.
 
 = 1.29.0 =
 * Improved PDF, XLSX and Text file generation filtering.
 * Added powered by Seatreg to registration view.
 
 = 1.28.0 =
-* Added options to use generic place instead of a genericseatterm. Useful if your registration is not dealing with genericseatterms.
+* Added options to use generic place instead of a seat. Useful if your registration is not dealing with seats.
 
 = 1.27.1 =
 * Open Redirect vulnerability fix.
 
 = 1.27.0 =
-* Booking manager can now delete individual genericseatterms from bookings.
+* Booking manager can now delete individual seats from bookings.
 
 = 1.26.3 =
-* Fixed map eidtor genericseatterm/boxes moving issue with larger grids.
+* Fixed map eidtor seat/boxes moving issue with larger grids.
 * Changed Stripe API version to 2020-08-27 when dealing with Stripe.
 * Added donation text.
 
@@ -268,7 +268,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Added zooming and moving controls to mobile view.
 
 = 1.25.1 =
-* Fixed issue with map editor genericseatterm numbering.
+* Fixed issue with map editor seat numbering.
 
 = 1.25.0 =
 * Added payment table to booking check page.
@@ -278,13 +278,13 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Stripe payment support added.
 
 = 1.23.1 =
-* Fix booking submit when special characters are used in genericseatterm nr.
+* Fix booking submit when special characters are used in seat nr.
 
 = 1.23.0 =
 * Color picker update on map-eidtor page. Allows to set transparent background.
 
 = 1.22.0 =
-* Checkout field values copy when multiple genericseatterms selected
+* Checkout field values copy when multiple seats selected
 * Minor style fixes 
 
 = 1.21.0 =
@@ -304,7 +304,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Bug fix
 
 = 1.19.0 =
-* Seat lock and genericseatterm password feature added.
+* Seat lock and seat password feature added.
 
 = 1.18.0 =
 * Display warning in booking status page when pending booking expiration time is set
@@ -403,7 +403,7 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 
 = 1.3.0 =
 * Added support for PayPal payments
-* With map builder you can now add prices to genericseatterms
+* With map builder you can now add prices to seats
 * In settings you can turn on and configure PayPal
 
 = 1.2.0 =
@@ -417,10 +417,10 @@ SeatReg is a plugin that offers the following and more to build and manage onlin
 * Some style fixes
 
 = 1.0.9 =
-* Don't ask confirmation email when multi genericseatterms enabled and email confirmation turned off.
+* Don't ask confirmation email when multi seats enabled and email confirmation turned off.
 
 = 1.0.8 =
-* Fixed issue with multiple genericseatterm booking edit
+* Fixed issue with multiple seat booking edit
 
 = 1.0.7 =
 * Using Unix timestamps in DB.

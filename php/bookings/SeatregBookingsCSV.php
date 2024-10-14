@@ -36,8 +36,8 @@ class SeatregBookingsCSV extends SeatregBookingsFile {
             $csvRow[SEATREG_CSV_COL_FIRST_NAME] = $registration->first_name;
             $csvRow[SEATREG_CSV_COL_LAST_NAME] = $registration->last_name;
             $csvRow[SEATREG_CSV_COL_EMAIL] = $registration->email;
-            $csvRow[SEATREG_CSV_COL_GENERICSEATTERM_ID] = $registration->genericseatterm_id;
-            $csvRow[SEATREG_CSV_COL_GENERICSEATTERM_NR] = $registration->genericseatterm_nr;
+            $csvRow[SEATREG_CSV_COL_SEAT_ID] = $registration->seat_id;
+            $csvRow[SEATREG_CSV_COL_SEAT_NR] = $registration->seat_nr;
             $csvRow[SEATREG_CSV_COL_ROOM_UUID] = $registration->room_uuid;
             $csvRow[SEATREG_CSV_COL_BOOKING_DATE] = $registration->booking_date;
             $csvRow[SEATREG_CSV_COL_BOOKING_CONFIRM_DATE] = $registration->booking_confirm_date;

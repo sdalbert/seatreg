@@ -700,7 +700,7 @@
 	border-radius: 50%;
 	border: 1px solid black; 
 }
-.seatreg-map-builder-page .genericseatterm-number {
+.seatreg-map-builder-page .seat-number {
 	text-align: center;
 }
 /*scrollbar*/
@@ -1020,7 +1020,7 @@
 	background-position: -257px -320px
 }
 
-.seatreg-map-builder-page .guide-item-genericseatterm-nr {
+.seatreg-map-builder-page .guide-item-seat-nr {
 	background-position: -305px -6px;
 }
 
@@ -1256,7 +1256,7 @@
 	margin-bottom: 10px;
 }
 
-.seatreg-map-builder-page #selected-genericseatterms-for-locking {
+.seatreg-map-builder-page #selected-seats-for-locking {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -1265,7 +1265,7 @@
 	text-align: center;
 	margin-bottom: 8px;
 }
-.seatreg-map-builder-page #selected-genericseatterms-for-pricing {
+.seatreg-map-builder-page #selected-seats-for-pricing {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
@@ -1278,7 +1278,7 @@
 	width: 80px;
 }
 
-#selected-genericseatterms-for-locking .lock-item {
+#selected-seats-for-locking .lock-item {
 	width: 160px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -1287,7 +1287,7 @@
 	text-align: center;
 }
 
-#selected-genericseatterms-for-pricing {
+#selected-seats-for-pricing {
 	.price-item {
 		border: 1px solid #ccc;
 		border-radius: 4px;
@@ -1296,7 +1296,7 @@
 		text-align: center;
 	}
 
-	.price-item-genericseatterm {
+	.price-item-seat {
 		font-weight: 700;
 	}
 
@@ -1332,12 +1332,12 @@
 	}
 }
 
-#selected-genericseatterms-for-locking .lock-item input[type=text] {
+#selected-seats-for-locking .lock-item input[type=text] {
 	width: 100%;
 	box-sizing: border-box;
 }
 
-#selected-genericseatterms-for-locking .lock-item input[type=checkbox] {
+#selected-seats-for-locking .lock-item input[type=checkbox] {
 	margin-left: 8px;
 }
 

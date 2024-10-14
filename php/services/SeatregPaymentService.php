@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class SeatregPaymentService {
     /**
      *
-     * Return genericseatterm price from registration layout
+     * Return seat price from registration layout
      *
     */
     public static function insertProcessingPayment($bookingId) {

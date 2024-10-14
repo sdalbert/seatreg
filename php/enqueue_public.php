@@ -66,7 +66,7 @@ function seatreg_public_scripts_and_styles() {
 
 		$data = seatreg_get_options_reg($_GET['c']);
 		$filterCalendarDate = SeatregCalendarService::getBookingFilteringDateForRegistrationView($data->using_calendar, assignIfNotEmpty($_GET['calendar-date'], null));
-		$genericseattermsInfo = json_encode( SeatregLayoutService::getBookingsInfoForLayout($data->registration_layout, $data->registration_code, $filterCalendarDate) );
+		$seatsInfo = json_encode( SeatregLayoutService::getBookingsInfoForLayout($data->registration_layout, $data->registration_code, $filterCalendarDate) );
 		$registrationTime = seatreg_registration_time_status( $data->registration_start_timestamp,  $data->registration_end_timestamp );
 		$selectedShowRegistrationData = $data->show_bookings_data_in_registration ? explode(',', $data->show_bookings_data_in_registration) : [];
 		$registrations = json_encode(SeatregBookingRepository::getBookingsForRegistrationPage($_GET['c'], $selectedShowRegistrationData, $filterCalendarDate));
@@ -83,11 +83,11 @@ function seatreg_public_scripts_and_styles() {
 		$inlineScript .= 'try {';
 			$inlineScript .= 'var seatregPluginFolder = "' . SEATREG_PLUGIN_FOLDER_URL . '";';
 			$inlineScript .= "var seatregTranslations = jQuery.parseJSON('" .  wp_json_encode( seatreg_generate_registration_strings() ) . "');";
-			$inlineScript .= 'var genericseattermLimit = ' . esc_js($data->genericseatterms_at_once) . ';';
+			$inlineScript .= 'var seatLimit = ' . esc_js($data->seats_at_once) . ';';
 			$inlineScript .= 'var gmail = ' . esc_js($data->gmail_required) . ';';
 			$inlineScript .= 'var NotifyBookerPendingBooking = ' . esc_js($data->notify_booker_pending_booking) . ';';
 			$inlineScript .= 'var dataReg = jQuery.parseJSON(' . wp_json_encode(SeatregLayoutService::hideSensitiveData($data->registration_layout)) . ');';
-			$inlineScript .= 'var roomsInfo = jQuery.parseJSON(' . wp_json_encode($genericseattermsInfo) . ');';
+			$inlineScript .= 'var roomsInfo = jQuery.parseJSON(' . wp_json_encode($seatsInfo) . ');';
 			$inlineScript .= 'var custF = jQuery.parseJSON(' . wp_json_encode($data->custom_fields) . ');';
 			$inlineScript .= 'var regTime = "' . esc_js($registrationTime) . '";';
 			$inlineScript .= 'var registrations = jQuery.parseJSON(' . wp_json_encode($registrations) . ');';
@@ -98,7 +98,7 @@ function seatreg_public_scripts_and_styles() {
 			$inlineScript .= 'var customPaymentEnabled = "'. esc_js($data->custom_payment || SeatregPaymentRepository::hasCustomPayments($data)) . '";';
 			$inlineScript .= 'var payPalCurrencyCode = "'. esc_js($data->paypal_currency_code) . '";';
 			$inlineScript .= 'var receiptEnabled = "'. esc_js( $data->send_approved_booking_email) . '";';
-			$inlineScript .= 'var usingSeats = "'. esc_js( $data->using_genericseatterms ) . '";';
+			$inlineScript .= 'var usingSeats = "'. esc_js( $data->using_seats ) . '";';
 			$inlineScript .= 'var usingCalendar = "'. esc_js( $data->using_calendar ) . '";';
 			$inlineScript .= 'var calendarDates = "'. esc_js( $data->calendar_dates ) . '";';
 			$inlineScript .= 'var activeCalendarDate = "'. esc_js($filterCalendarDate) . '";';
