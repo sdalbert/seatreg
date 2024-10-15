@@ -252,8 +252,8 @@ class SeatregDataValidation {
                 return $validationStatus;
             }
 
-            if( !property_exists($roomData->room, 'seatCounter') || !is_int($roomData->room->seatCounter) ) {
-                $validationStatus->setInvalid('room seatCounter missing or invalid');
+            if( !property_exists($roomData->room, 'genericseattermCounter') || !is_int($roomData->room->genericseattermCounter) ) {
+                $validationStatus->setInvalid('room genericseattermCounter missing or invalid');
                 return $validationStatus;
             }
 
@@ -318,8 +318,8 @@ class SeatregDataValidation {
                     return $validationStatus;
                 }
 
-                if( !property_exists($box, 'seat') ) {
-                    $validationStatus->setInvalid('box seat is missing or invalid');
+                if( !property_exists($box, 'genericseatterm') ) {
+                    $validationStatus->setInvalid('box genericseatterm is missing or invalid');
                     return $validationStatus;
                 }
 
@@ -483,7 +483,7 @@ class SeatregDataValidation {
             }
 
             if( count($customFieldsDecoded) > (int)$maxSeats ) {
-                $validationStatus->setInvalid('Max seats limit exceeded');
+                $validationStatus->setInvalid('Max genericseatterms limit exceeded');
                 return $validationStatus;
             }
 
@@ -588,10 +588,10 @@ class SeatregDataValidation {
         return $validationStatus;
     }
 
-    public static function validateBookingData($seatId, $seatNr, $roomUUID) {
+    public static function validateBookingData($genericseattermId, $genericseattermNr, $roomUUID) {
         $validationStatus = new SeatregValidationStatus();
 
-        if(!preg_match('/^[\p{L}\p{N}]+$/u', $seatId)) {
+        if(!preg_match('/^[\p{L}\p{N}]+$/u', $genericseattermId)) {
             $validationStatus->setInvalid('Illegal characters in booking data');
             return $validationStatus;
         }

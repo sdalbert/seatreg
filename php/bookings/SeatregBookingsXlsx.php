@@ -93,9 +93,9 @@ class SeatregBookingsXlsx extends SeatregBookingsFile {
             $registrantCustomData = json_decode($registration->custom_field_data, true);
             $status = $this->getStatus($registration->status);
             $bookingDate = $this->getBookingDate($registration->booking_date);
-            $seatPrice = SeatregLayoutService::getSeatPriceFromLayout($registration, $this->_roomData);
-            $priceDescription = $seatPrice->description ? '('. $seatPrice->description . ')' : '';
-            $priceText = $seatPrice->price . ' ' . $this->_registrationInfo->paypal_currency_code .  ' ' . $priceDescription;
+            $genericseattermPrice = SeatregLayoutService::getSeatPriceFromLayout($registration, $this->_roomData);
+            $priceDescription = $genericseattermPrice->description ? '('. $genericseattermPrice->description . ')' : '';
+            $priceText = $genericseattermPrice->price . ' ' . $this->_registrationInfo->paypal_currency_code .  ' ' . $priceDescription;
 
             $nameField = $this->_separateFirstandLastName 
                 ? array(esc_html($registration->first_name), esc_html($registration->last_name))
@@ -103,7 +103,7 @@ class SeatregBookingsXlsx extends SeatregBookingsFile {
 
             $registrationData = array_merge(
                 array(
-                    esc_html($registration->seat_nr),
+                    esc_html($registration->genericseatterm_nr),
                     esc_html($registration->room_name),
                 ),
                 $nameField,

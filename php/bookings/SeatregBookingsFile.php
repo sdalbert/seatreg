@@ -42,7 +42,7 @@ class SeatregBookingsFile {
         $this->_customFields = ($this->_registrationInfo->custom_fields !== null) ? json_decode($this->_registrationInfo->custom_fields, true) : [];
         $this->_registrations = $this->filtering( seatreg_get_data_for_booking_file($this->_registrationCode, $this->_showWhat, $this->_calendarDate) );
         $this->_registrationName = esc_html($this->_registrationInfo->registration_name);
-        $this->_usingSeats = $this->_registrationInfo->using_seats === '1';
+        $this->_usingSeats = $this->_registrationInfo->using_genericseatterms === '1';
         $this->_roomData = json_decode( $this->_registrationInfo->registration_layout )->roomData;
     }
 

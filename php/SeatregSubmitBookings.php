@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 //===========
-	/* Data coming from registration view. Someone wants to book a seat/seats */
+	/* Data coming from registration view. Someone wants to book a genericseatterm/genericseatterms */
 //===========
 
 class SeatregSubmitBookings extends SeatregBooking {
@@ -22,10 +22,10 @@ class SeatregSubmitBookings extends SeatregBooking {
       	$this->getRegistrationAndOptions();
     }
 
-    public function validateAndPopulateBookingData($firstname, $lastname, $email, $seatID, $seatNr, $emailToSend, $code, $pw, $customFields, $roomUUID, $passwords, $multiPriceUUID) {
+    public function validateAndPopulateBookingData($firstname, $lastname, $email, $genericseattermID, $genericseattermNr, $emailToSend, $code, $pw, $customFields, $roomUUID, $passwords, $multiPriceUUID) {
     	$this->_bookerEmail = $emailToSend;
         $this->_submittedPassword = $pw;
-		$this->_seatPasswords = json_decode(stripslashes_deep($passwords));
+		$this->_genericseattermPasswords = json_decode(stripslashes_deep($passwords));
 
 		if( $this->_usingCalendar ) {
 			$this->_userSelectedCalendarDate = $_POST['selected-calendar-date'];
@@ -56,7 +56,7 @@ class SeatregSubmitBookings extends SeatregBooking {
 			}
 
 			//booking data validation
-			$bookingDataValidation = SeatregDataValidation::validateBookingData($seatID[$key], $seatNr[$key], $roomUUID[$key]);
+			$bookingDataValidation = SeatregDataValidation::validateBookingData($genericseattermID[$key], $genericseattermNr[$key], $roomUUID[$key]);
 
 			if( !$bookingDataValidation->valid ) {
 				$this->response->setValidationError( $bookingDataValidation->errorMessage );
@@ -69,8 +69,8 @@ class SeatregSubmitBookings extends SeatregBooking {
     		$booking->firstname = sanitize_text_field($value);
     		$booking->lastname = sanitize_text_field($lastname[$key]);
     		$booking->email = sanitize_email($email[$key]);
-    		$booking->seat_id = sanitize_text_field($seatID[$key]);
-    		$booking->seat_nr = sanitize_text_field($seatNr[$key]);
+    		$booking->genericseatterm_id = sanitize_text_field($genericseattermID[$key]);
+    		$booking->genericseatterm_nr = sanitize_text_field($genericseattermNr[$key]);
 			$booking->room_uuid = sanitize_text_field($roomUUID[$key]);
     		$booking->custom_field = $customFieldData[$key];
 			$booking->multi_price_selection = sanitize_text_field($multiPriceUUID[$key]);
@@ -110,8 +110,8 @@ class SeatregSubmitBookings extends SeatregBooking {
 		}
 
 		//1.step
-		//Selected seat limit check
-		if(!$this->seatsLimitCheck()) {
+		//Selected genericseatterm limit check
+		if(!$this->genericseattermsLimitCheck()) {
 			$this->response->setError(esc_html__('Error. Seat limit exceeded', 'seatreg'));
 
 			return;
@@ -120,16 +120,16 @@ class SeatregSubmitBookings extends SeatregBooking {
 		//2.step
 		$this->isSeperateSeats();
 		if(!$this->_isValid) {
-			$this->response->setError(esc_html__('Error. Dublicated seats', 'seatreg'));
+			$this->response->setError(esc_html__('Error. Dublicated genericseatterms', 'seatreg'));
 
 			return;
 		}
 
 		//3.step
-		//seat room, id, nr exists check
-		$seatsStatusCheck = $this->doSeatsExistInRegistrationLayoutCheck();
-		if($seatsStatusCheck != 'ok') {
-			$this->response->setError($seatsStatusCheck);
+		//genericseatterm room, id, nr exists check
+		$genericseattermsStatusCheck = $this->doSeatsExistInRegistrationLayoutCheck();
+		if($genericseattermsStatusCheck != 'ok') {
+			$this->response->setError($genericseattermsStatusCheck);
 
 			return;
 		}
@@ -170,7 +170,7 @@ class SeatregSubmitBookings extends SeatregBooking {
 			return;
 		}
 
-		//6.step. Check if seat/seats are allready taken
+		//6.step. Check if genericseatterm/genericseatterms are allready taken
 		$bookStatus = $this->isAllSelectedSeatsOpen($this->_userSelectedCalendarDate); 
 		if($bookStatus != 'ok') {
 			$this->response->setError($bookStatus);
@@ -206,16 +206,16 @@ class SeatregSubmitBookings extends SeatregBooking {
 
 		}
 	
-		//8.step. Check if seat/seats are locked
-		$lockStatus = $this->seatLockCheck();
+		//8.step. Check if genericseatterm/genericseatterms are locked
+		$lockStatus = $this->genericseattermLockCheck();
 		if($lockStatus != 'ok') {
 			$this->response->setError($lockStatus);
 
 			return;
 		}
 
-		//9.step. seat/seats password check
-		$passwordStatus = $this->seatPasswordCheck();
+		//9.step. genericseatterm/genericseatterms password check
+		$passwordStatus = $this->genericseattermPasswordCheck();
 		if($passwordStatus != 'ok') {
 			$this->response->setError($passwordStatus);
 
@@ -257,8 +257,8 @@ class SeatregSubmitBookings extends SeatregBooking {
 			}
 		}
 
-		//14. WP user bookings seats limit restriction.
-		if( $this->_wp_user_bookings_seat_limit !== null && SeatregAuthService::isLoggedIn() ) {
+		//14. WP user bookings genericseatterms limit restriction.
+		if( $this->_wp_user_bookings_genericseatterm_limit !== null && SeatregAuthService::isLoggedIn() ) {
 			$wpUserBookingsSeatsLimitStatus = $this->wpUserBookingsSeatLimitCheck( SeatregAuthService::getCurrentUserId(), $this->_registrationCode, count($this->_bookings) );
 
 			if( $wpUserBookingsSeatsLimitStatus !== 'ok' ) {
@@ -276,13 +276,13 @@ class SeatregSubmitBookings extends SeatregBooking {
 	}
 
 	private function isSeperateSeats() {
-		//check so each seat is different. Prevents dublicate booking on same seat
-		$seatIds = array();
+		//check so each genericseatterm is different. Prevents dublicate booking on same genericseatterm
+		$genericseattermIds = array();
 		$dataLen = count($this->_bookings);
 
 		for($i = 0; $i < $dataLen; $i++) {
-			if(!in_array($this->_bookings[$i]->seat_id, $seatIds)) {
-				array_push($seatIds, $this->_bookings[$i]->seat_id);
+			if(!in_array($this->_bookings[$i]->genericseatterm_id, $genericseattermIds)) {
+				array_push($genericseattermIds, $this->_bookings[$i]->genericseatterm_id);
 			}else {
 				$this->_isValid = false;
 
@@ -303,7 +303,7 @@ class SeatregSubmitBookings extends SeatregBooking {
 			$this->_bookingId = sha1(mt_rand(10000,99999).time().$this->_bookerEmail);
 			$currentTimeStamp = time();
 			$registrationConfirmDate = null;
-			$seatsString = $this->generateSeatString();
+			$genericseattermsString = $this->generateSeatString();
 			$bookingCheckURL = seatreg_get_registration_status_url($this->_registrationCode, $this->_bookingId);
 
 			if(!$this->_requireBookingEmailConfirm) {
@@ -324,8 +324,8 @@ class SeatregSubmitBookings extends SeatregBooking {
 						'first_name' => $this->_bookings[$i]->firstname, 
 						'last_name' => $this->_bookings[$i]->lastname,
 						'email' => $this->_bookings[$i]->email,
-						'seat_id' => $this->_bookings[$i]->seat_id,
-						'seat_nr' => $this->_bookings[$i]->seat_nr,
+						'genericseatterm_id' => $this->_bookings[$i]->genericseatterm_id,
+						'genericseatterm_nr' => $this->_bookings[$i]->genericseatterm_nr,
 						'room_uuid' => $this->_bookings[$i]->room_uuid,
 						'conf_code' => $confCode, 
 						'custom_field_data' => json_encode($this->_bookings[$i]->custom_field, JSON_UNESCAPED_UNICODE),
@@ -334,7 +334,7 @@ class SeatregSubmitBookings extends SeatregBooking {
 						'booking_date' => $currentTimeStamp,
 						'booking_confirm_date' => $registrationConfirmDate,
 						'booker_email' => $this->_bookerEmail,
-						'seat_passwords' => json_encode($this->_seatPasswords),
+						'genericseatterm_passwords' => json_encode($this->_genericseattermPasswords),
 						'multi_price_selection' => $multiPriceSelection,
 						'calendar_date' => $this->_userSelectedCalendarDate,
 						'logged_in_user_id' => SeatregAuthService::getCurrentUserId()

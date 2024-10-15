@@ -75,7 +75,7 @@
 	*/
 
 	//box class 12 construct
-	function Box(legend, xPos, yPos, xSize, ySize, id, color, hoverText, canIRegister, seat, status, zIndex, price, type) {
+	function Box(legend, xPos, yPos, xSize, ySize, id, color, hoverText, canIRegister, genericseatterm, status, zIndex, price, type) {
 		this.legend = legend;
 		this.xPosition = xPos;
 		this.yPosition = yPos;
@@ -86,7 +86,7 @@
 		this.hoverText = hoverText;
 		this.id = id;
 		this.canRegister = canIRegister;
-		this.seat = seat;
+		this.genericseatterm = genericseatterm;
 		this.status = status;
 		this.zIndex = zIndex;
 		this.price = price;
@@ -129,7 +129,7 @@
 	};
 
 	Box.prototype.changeSeatNr = function(newSeatNr) {
-		this.seat = newSeatNr;
+		this.genericseatterm = newSeatNr;
 	};
 
 	//change color
@@ -203,7 +203,7 @@
 	}
 
 	Box.prototype.renderSeatNr = function() {
-		$('.build-area .drag-box[data-id="'+ this.id +'"] .seat-number').text(this.prefix + this.seat);
+		$('.build-area .drag-box[data-id="'+ this.id +'"] .genericseatterm-number').text(this.prefix + this.genericseatterm);
 	};
 
 	Box.prototype.changePrefix = function(newPrefix) {
@@ -275,7 +275,7 @@
 			legends: roomLegendArray,
 			width: this.roomWidth + 10,
 			height: this.roomHeight + 10,
-			seatCounter: this.roomSeatCounter,
+			genericseattermCounter: this.roomSeatCounter,
 			backgroundImage: this.backgroundImage
 		}
 
@@ -300,7 +300,7 @@
 				hoverText: this.boxes[i].hoverText.replace(/<br>/g,'^'),
 				id: this.boxes[i].id,
 				canRegister: canReg,
-				seat: this.boxes[i].seat,
+				genericseatterm: this.boxes[i].genericseatterm,
 				status: 'noStatus',
 				zIndex: this.boxes[i].zIndex,
 				price: this.boxes[i].price,
@@ -355,11 +355,11 @@
 	};
 
 	//add box to room from server data
-	Room.prototype.addBoxS = function(title,posX,posY,sizeX,sizeY,id,color,hoverText,canIRegister,status,boxZIndex, price, type, input, fontColor, inputSize, lock, password, prefix, seatNr) {
+	Room.prototype.addBoxS = function(title,posX,posY,sizeX,sizeY,id,color,hoverText,canIRegister,status,boxZIndex, price, type, input, fontColor, inputSize, lock, password, prefix, genericseattermNr) {
 		if(canIRegister) {
 			this.roomSeatCounter++;
 		}
-		var box = new Box(title,posX,posY,sizeX,sizeY,id,color,hoverText,canIRegister,seatNr,status,boxZIndex, price, type);
+		var box = new Box(title,posX,posY,sizeX,sizeY,id,color,hoverText,canIRegister,genericseattermNr,status,boxZIndex, price, type);
 		box.input = input;
 		box.fontColor = fontColor;
 		box.inputSize = inputSize;
@@ -371,15 +371,15 @@
 		this.setBuildingAreaDimentions();
 	};
 
-	//find last bron or taken seat and return it seat number
+	//find last bron or taken genericseatterm and return it genericseatterm number
 	Room.prototype.lastBronOrTaken = function() {
 		var arrLength = this.boxes.length;
 		var lastNr = 0;
 
 		for(var i = 0; i < arrLength; i++) {
 			if(this.boxes[i].status == 'bronRegister' || this.boxes[i].status == 'takenRegister') {
-				if(this.boxes[i].seat > lastNr) {
-					lastNr = this.boxes[i].seat;
+				if(this.boxes[i].genericseatterm > lastNr) {
+					lastNr = this.boxes[i].genericseatterm;
 				}
 			}
 		}
@@ -527,7 +527,7 @@
 		this.needToChangeStructure = false;
 		this.needToSave = false;  //if user makes changes this will be true. when saved this will be false
 		this.roomNameChange = {};  //if room name got changed. store old and new here
-		this.usingSeats = true; //do we use seats or generic place
+		this.usingSeats = true; //do we use genericseatterms or generic place
 		this.settings = {};
 	}
 
@@ -817,12 +817,12 @@
 					colorBox.css({
 						'background-color':'yellow',
 					}).addClass('legend-box-circle');
-					textSpan.text(this.using_seats ? translator.translate('pendingSeat') : translator.translate('pendingPlace'));
+					textSpan.text(this.using_genericseatterms ? translator.translate('pendingSeat') : translator.translate('pendingPlace'));
 					break;
 
 				case 1:
 					colorBox.css('background-color','red').addClass('legend-box-circle');
-					textSpan.text(this.using_seats ? translator.translate('confirmedSeat') : translator.translate('confirmedPlace'));
+					textSpan.text(this.using_genericseatterms ? translator.translate('confirmedSeat') : translator.translate('confirmedPlace'));
 					break;
 			}
 			$('.legends').append(colorBox,textSpan);
@@ -1245,9 +1245,9 @@
 					if(location.legend == 'RegSpot') {
 						location.changeRegisterStatus(false);
 						this.rooms[this.currentRoom].roomSeatCounter--;
-						location.seat = 0;
+						location.genericseatterm = 0;
 						location.legend = 'custom';
-						$('.build-area .drag-box[data-id="' + this.activeBoxArray[i] + '"]').removeClass('can-register').addClass('no-register').removeAttr('data-seatnr').css('background-color', '#ccc').find('.seat-number').text('');
+						$('.build-area .drag-box[data-id="' + this.activeBoxArray[i] + '"]').removeClass('can-register').addClass('no-register').removeAttr('data-genericseattermnr').css('background-color', '#ccc').find('.genericseatterm-number').text('');
 					}
 				}
 			}
@@ -1579,7 +1579,7 @@
 		var box = $('<div>').addClass('drag-box can-register active-box ' + dataCounter).attr({
 			style: skelStyle, 
 			'data-id':dataCounter,
-			'data-seatnr': nr
+			'data-genericseattermnr': nr
 		}).on('click', function() { //chen you klik box			
 			if(regScope.action == 1) {	//is mouse action 1?
 				regScope.activeBoxArray.length = 0;  //make sure activebox in empty.
@@ -1612,11 +1612,11 @@
 				$(this).removeClass('active-box');
 			}
 			if(reg.action == 5) {
-				$(this).removeClass('can-register active-box').removeAttr('data-seatnr').css('background-color','#cccccc');
+				$(this).removeClass('can-register active-box').removeAttr('data-genericseattermnr').css('background-color','#cccccc');
 			}
 
 			if(reg.action == 1 || reg.action == 2) {
-				$(this).append($('<div>').addClass('seat-number').text(nr));
+				$(this).append($('<div>').addClass('genericseatterm-number').text(nr));
 			}
 		});
 
@@ -1680,9 +1680,9 @@
 				}
 			}).appendTo('.build-area').each(function(){
 				if(regScope.rooms[regScope.currentRoom].boxes[i].canRegister === true) {
-					$(this).addClass('can-register').attr('data-seatnr', regScope.rooms[regScope.currentRoom].boxes[i].seat);
+					$(this).addClass('can-register').attr('data-genericseattermnr', regScope.rooms[regScope.currentRoom].boxes[i].genericseatterm);
 
-					$(this).append($('<div>').addClass('seat-number').text(regScope.rooms[regScope.currentRoom].boxes[i].prefix + regScope.rooms[regScope.currentRoom].boxes[i].seat));
+					$(this).append($('<div>').addClass('genericseatterm-number').text(regScope.rooms[regScope.currentRoom].boxes[i].prefix + regScope.rooms[regScope.currentRoom].boxes[i].genericseatterm));
 
 					if(regScope.rooms[regScope.currentRoom].boxes[i].status == 'bronRegister') {
 						$(this).append($('<div>').addClass('bron-sign'));
@@ -2181,7 +2181,7 @@
 		var arrLen = registratedSpots.length;
 
 		for(var i = 0; i < arrLen; i++) {
-			 this.updateBoxStatus(registratedSpots[i].seat_id, registratedSpots[i].status);
+			 this.updateBoxStatus(registratedSpots[i].genericseatterm_id, registratedSpots[i].status);
 		}
 	};
 
@@ -2220,7 +2220,7 @@
 			this.setBuilderHeight();
 		}else {
 			this.settings = window.seatreg.settings;
-			this.usingSeats = window.seatreg.settings.using_seats === '1';
+			this.usingSeats = window.seatreg.settings.using_genericseatterms === '1';
 
 			var roomData = responseObj.roomData;
 			this.regBoxCounter = responseObj.global.boxCounter;
@@ -2291,7 +2291,7 @@
 							arr[i].lock,
 							arr[i].password,
 							arr[i].prefix,
-							arr[i].seat
+							arr[i].genericseatterm
 						);
 			    	}
 			    }
@@ -2360,7 +2360,7 @@
 		if(canMove) {
 			return {'status': true};
 		}else {
-			return {'status': false, 'nr': this.rooms[this.currentRoom].boxes[b].seat, 'minDest': minDest};
+			return {'status': false, 'nr': this.rooms[this.currentRoom].boxes[b].genericseatterm, 'minDest': minDest};
 		}
 	};
 
@@ -2501,7 +2501,7 @@
 		$('#margin-y').val(reg.rooms[reg.currentRoom].skeleton.marginY);
 	});
 
-	$('#seat-numbering-dialog').on('show.bs.modal', function() {
+	$('#genericseatterm-numbering-dialog').on('show.bs.modal', function() {
 		var currentRoom = reg.rooms[reg.currentRoom];
 		var selectedBoxes = reg.activeBoxArray.map(function(selectedBoxId) {
 			return currentRoom.findAndReturnBox(selectedBoxId);
@@ -2513,29 +2513,29 @@
 			return box.canRegister === true && box.status === "noStatus";
 		});
 
-		$('#seat-numbering-dialog .alert').addClass('d-none');
-		$('#seat-numbering-wrap').removeClass('d-none');
+		$('#genericseatterm-numbering-dialog .alert').addClass('d-none');
+		$('#genericseatterm-numbering-wrap').removeClass('d-none');
 
 		if(!selectedSeats.length) {
-			$('#seat-nr-change-no-selection').removeClass('d-none');
-			$('#seat-numbering-wrap').addClass('d-none');
+			$('#genericseatterm-nr-change-no-selection').removeClass('d-none');
+			$('#genericseatterm-numbering-wrap').addClass('d-none');
 		}else {
 			if(hasStatusSeat) {
-				$('#seat-nr-change-warning').removeClass('d-none');
+				$('#genericseatterm-nr-change-warning').removeClass('d-none');
 			}
 
-			$('#set-seat-prefix').off('click').on('click', function() {
-				selectedSeats.forEach(function(seat) {
-					var box = currentRoom.findAndReturnBox(seat.id);
+			$('#set-genericseatterm-prefix').off('click').on('click', function() {
+				selectedSeats.forEach(function(genericseatterm) {
+					var box = currentRoom.findAndReturnBox(genericseatterm.id);
 
-					box.changePrefix( $('#seat-prefix').val() );
+					box.changePrefix( $('#genericseatterm-prefix').val() );
 				});
 			})
-			$('#reorder-seats').off('click').on('click', function() {
-				var startReorderFrom = $('#seat-reorder').val();
+			$('#reorder-genericseatterms').off('click').on('click', function() {
+				var startReorderFrom = $('#genericseatterm-reorder').val();
 
-				selectedSeats.forEach(function(seat) {
-					var box = currentRoom.findAndReturnBox(seat.id);
+				selectedSeats.forEach(function(genericseatterm) {
+					var box = currentRoom.findAndReturnBox(genericseatterm.id);
 
 					box.changeSeatNr(startReorderFrom);
 					box.renderSeatNr();
@@ -2545,8 +2545,8 @@
 		}
 	});
 
-	$('#lock-seat-dialog').on('show.bs.modal', function() {
-		var $lockWrap = $('#selected-seats-for-locking');
+	$('#lock-genericseatterm-dialog').on('show.bs.modal', function() {
+		var $lockWrap = $('#selected-genericseatterms-for-locking');
 		var currentRoom = reg.rooms[reg.currentRoom];
 		var selectedBoxes = reg.activeBoxArray.map(function(selectedBoxId) {
 			var boxLocation = currentRoom.findBox(selectedBoxId);
@@ -2561,16 +2561,16 @@
 
 		if(!hasSeatSelected) {
 			$('.set-password-wrap').addClass('d-none');
-			$('#set-seat-locks').addClass('d-none');
+			$('#set-genericseatterm-locks').addClass('d-none');
 			$lockWrap.append(
 				'<div class="alert alert-primary">'+ translator.translate('noSeatsSelected') +'</div>'
 			);
 		}else if(selectedBoxes.length == 1) {
 			$('.set-password-wrap').addClass('d-none');
-			$('#set-seat-locks').removeClass('d-none');
+			$('#set-genericseatterm-locks').removeClass('d-none');
 		}else {
 			$('.set-password-wrap').removeClass('d-none');
-			$('#set-seat-locks').removeClass('d-none');
+			$('#set-genericseatterm-locks').removeClass('d-none');
 		}
 
 		selectedBoxes.forEach(function(box) {
@@ -2579,7 +2579,7 @@
 
 				$lockWrap.append(
 					'<div class="lock-item" data-box-location="' + boxLocation + '">' + 
-						'<div class="lock-item-seat">'  + box.seat  + '</div>' +
+						'<div class="lock-item-genericseatterm">'  + box.genericseatterm  + '</div>' +
 						'<label>' + translator.translate('lockSeat') +
 							'<input type="checkbox" ' + (box.lock ? "checked" : "") + ' />' + 
 						'</label>' +
@@ -2594,7 +2594,7 @@
 	});
 
 	$('#price-dialog').on('show.bs.modal', function() {
-		var $pricingWrap = $('#selected-seats-for-pricing');
+		var $pricingWrap = $('#selected-genericseatterms-for-pricing');
 		var currentRoom = reg.rooms[reg.currentRoom];
 		var selectedBoxes = reg.activeBoxArray.map(function(selectedBoxId) {
 			var boxLocation = currentRoom.findBox(selectedBoxId);
@@ -2631,9 +2631,9 @@
 
 				$pricingWrap.append(
 					'<div class="price-item" data-box-location="' + boxLocation + '">' + 
-						'<div class="price-item-seat">NR: '  + box.seat  + '</div>' +
+						'<div class="price-item-genericseatterm">NR: '  + box.genericseatterm  + '</div>' +
 						'<div class="prices"></div>' +
-						(inputEnabled ? '<div class="price-controls"><i class="fa fa-plus add-price" aria-hidden="true" title="Add price"></i></div>' : '<div class="alert alert-info">Occupied seat price cant be changed</div>') +
+						(inputEnabled ? '<div class="price-controls"><i class="fa fa-plus add-price" aria-hidden="true" title="Add price"></i></div>' : '<div class="alert alert-info">Occupied genericseatterm price cant be changed</div>') +
 					'</div>'
 				);
 
@@ -2682,7 +2682,7 @@
 	$("#fill-price-for-all-selected").on('click', function() {
 		var priceForAllSelected = $('#price-for-all-selected').val();
 
-		$("#selected-seats-for-pricing .price-item").each(function() {
+		$("#selected-genericseatterms-for-pricing .price-item").each(function() {
 			$(this).find('.price-input').not(':disabled').val(priceForAllSelected);
 		});
 	});
@@ -2690,7 +2690,7 @@
 	$("#fill-password-for-all-selected").on('click', function() {
 		var passwordForAllSelected = $('#password-for-all-selected').val();
 
-		$("#selected-seats-for-locking .lock-item").each(function() {
+		$("#selected-genericseatterms-for-locking .lock-item").each(function() {
 			$(this).find('input[type=text]').val(passwordForAllSelected);
 		});
 	});
@@ -2701,7 +2701,7 @@
 		var valid = true;
 
 		//Validation
-		$('#selected-seats-for-pricing .price-item').find('.multi-input').each(function() {
+		$('#selected-genericseatterms-for-pricing .price-item').find('.multi-input').each(function() {
 			if( $(this).find('.text-input').val() === '' ) {
 				alertify.error(translator.translate('addPriceDescription'));
 				valid = false;
@@ -2714,7 +2714,7 @@
 			return false;
 		}
 
-		$('#selected-seats-for-pricing .price-item').each(function() {
+		$('#selected-genericseatterms-for-pricing .price-item').each(function() {
 			var $this = $(this);
 			var boxLocation = $this.data('box-location');
 			var box = currentRoom.boxes[boxLocation];
@@ -2743,10 +2743,10 @@
 		}
 	});
 
-	$('#set-seat-locks').on('click', function() {
+	$('#set-genericseatterm-locks').on('click', function() {
 		var currentRoom = reg.rooms[reg.currentRoom];
 
-		$('#selected-seats-for-locking .lock-item').each(function() {
+		$('#selected-genericseatterms-for-locking .lock-item').each(function() {
 			var $this = $(this);
 			var boxLocation = $this.data('box-location');
 			var password = $this.find('input[type=text]').val();
@@ -2812,7 +2812,7 @@
 
     //color picket for main dialog
 	
-	var seatColorPicker = new Picker({
+	var genericseattermColorPicker = new Picker({
 		parent: document.querySelector('#picker'),
 		popup: false,
 		alpha: true,
@@ -3228,7 +3228,7 @@
 	});
 
 	$('#current-room-delete').on('click', function() {
-		//do i have bron or reg seats?
+		//do i have bron or reg genericseatterms?
 
 		if(!reg.rooms[reg.currentRoom].bronOrRegCheck()) {
 			alertify.set({ 
@@ -3306,8 +3306,8 @@
 	//palette icon click
 	$('.palette-call').on('click', function(){
 		if(reg.activeBoxArray.length > 0) {
-		//preset color with current seat color
-		seatColorPicker.setColor(reg.getBoxColor());		
+		//preset color with current genericseatterm color
+		genericseattermColorPicker.setColor(reg.getBoxColor());		
 		$("#color-dialog").modal("toggle");
 		}else {
 			var palleteGuide = '<div><div class="guide-block">'+ translator.translate('toSelectOneBox_') +'<div class="guide-item guide-item-mouse"></div></div><br><div class="guide-block">'+ translator.translate('toSelectMultiBox_') +'<div class="guide-item guide-item-lasso"></div></div>';

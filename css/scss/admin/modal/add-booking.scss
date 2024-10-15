@@ -6,7 +6,7 @@
         .add-modal-input-wrap {
             margin-bottom: 12px;
 
-            .seat-id-search {
+            .genericseatterm-id-search {
                 vertical-align: middle;
                 padding-top: 20px;
                 margin-left: 4px;
@@ -41,18 +41,18 @@
         .bottom-action {
             margin-top: 24px;
 
-            .seat-operations {
+            .genericseatterm-operations {
                 display: flex;
                 justify-content: center;
                 margin-bottom: 12px;
 
-                .seat-operation {
+                .genericseatterm-operation {
                     cursor: pointer;
                     &:hover {
                         text-decoration: underline;
                     }
                 }
-                .seat-operation:first-child {
+                .genericseatterm-operation:first-child {
                     margin-right: 12px;
                 }
             }

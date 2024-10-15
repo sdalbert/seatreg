@@ -10,11 +10,11 @@
                 <?php esc_html_e('You need to enable PayPal, Stripe, or custom payment options in the settings to activate pricing functionality.', 'seatreg'); ?>
             </div>
             <div class="set-price-wrap">
-                <div><label for="price-for-all-selected"><?php esc_html_e('Fill price to all selected seats', 'seatreg'); ?></label></div>
+                <div><label for="price-for-all-selected"><?php esc_html_e('Fill price to all selected genericseatterms', 'seatreg'); ?></label></div>
                 <input type="number" min="0" oninput="this.value = Math.abs(this.value)" id="price-for-all-selected" value="0" />
                 <button type="button" class="btn btn-success btn-sm" id="fill-price-for-all-selected"><?php esc_html_e('Fill prices', 'seatreg'); ?></button>
             </div>
-            <div id="selected-seats-for-pricing"></div>
+            <div id="selected-genericseatterms-for-pricing"></div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal"><?php esc_html_e('Close', 'seatreg');?></button>

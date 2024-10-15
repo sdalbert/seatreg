@@ -31,16 +31,16 @@ class SeatregImportService {
             return $validation;
         }
 
-        $seatAndRoomValidation = SeatregLayoutService::validateRoomAndSeatId($this->roomData, $roomName, $bookingData->seat_id, $bookingData->seat_nr);
-        if( !$seatAndRoomValidation->valid ) {
+        $genericseattermAndRoomValidation = SeatregLayoutService::validateRoomAndSeatId($this->roomData, $roomName, $bookingData->genericseatterm_id, $bookingData->genericseatterm_nr);
+        if( !$genericseattermAndRoomValidation->valid ) {
             $validation->is_valid = false;
-            $validation->messages[] = $seatAndRoomValidation->errorText;
+            $validation->messages[] = $genericseattermAndRoomValidation->errorText;
         }
 
-        $seatBookedValidation = SeatregBookingService::checkIfSeatAlreadyBooked($bookingData->seat_id, $bookingData->seat_nr, $this->existingBookings);
-        if( !$seatBookedValidation->is_valid ) {
+        $genericseattermBookedValidation = SeatregBookingService::checkIfSeatAlreadyBooked($bookingData->genericseatterm_id, $bookingData->genericseatterm_nr, $this->existingBookings);
+        if( !$genericseattermBookedValidation->is_valid ) {
             $validation->is_valid = false;
-            $validation->messages = array_merge($validation->messages, $seatBookedValidation->messages);
+            $validation->messages = array_merge($validation->messages, $genericseattermBookedValidation->messages);
         }
 
         return $validation;
@@ -52,8 +52,8 @@ class SeatregImportService {
             $bookingData->last_name,
             $bookingData->email,
             json_decode($bookingData->custom_field_data),
-            $bookingData->seat_nr,
-            $bookingData->seat_id,
+            $bookingData->genericseatterm_nr,
+            $bookingData->genericseatterm_id,
             $bookingData->room_uuid,
             $this->seatregCode,
             $bookingData->status,

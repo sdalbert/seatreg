@@ -24,7 +24,7 @@
 		$(this).text(timeStampToDateString($(this).text()));
 	});
 
-	function seaterg_admin_ajax(action, code, data) {
+	function genericseattermerg_admin_ajax(action, code, data) {
 		return $.ajax({
 				url: ajaxurl,
 				type: 'POST',
@@ -38,7 +38,7 @@
 			});
 	}
 
-	function seaterg_admin_ajax2(action, code, data) {
+	function genericseattermerg_admin_ajax2(action, code, data) {
 		return $.ajax({
 				url: ajaxurl,
 				type: 'POST',
@@ -61,8 +61,8 @@
 					code: code,
 					fname: editInfo.firstName,
 					lname: editInfo.lastName,
-					room: editInfo.seatRoom,
-					seatid: editInfo.seatId,
+					room: editInfo.genericseattermRoom,
+					genericseattermid: editInfo.genericseattermId,
 					bookingid: editInfo.bookingId,
 					customfield: editInfo.customFieldData,
 					id: editInfo.id,
@@ -192,7 +192,7 @@
 	$('.seatreg-map-popup-btn').on('click', function() {
 		seatreg_clear_builder_data();
 		var code = $(this).data('map-code');
-		var promise = seaterg_admin_ajax('get_seatreg_layout_and_bookings', code, null);
+		var promise = genericseattermerg_admin_ajax('get_seatreg_layout_and_bookings', code, null);
 
 		promise.done(function(data) {
 			if(data._response.type == 'ok') {
@@ -220,7 +220,7 @@
 						paypal_payments: data._response.data.registration[0].paypal_payments,
 						stripe_payments: data._response.data.registration[0].stripe_payments,
 						custom_payment: data._response.data.registration[0].custom_payment,
-						using_seats: data._response.data.registration[0].using_seats
+						using_genericseatterms: data._response.data.registration[0].using_genericseatterms
 					};
 					$('.reg-title-name').text(data._response.data.registration[0].registration_name);
 				
@@ -355,7 +355,7 @@ $('#existing-regs-wrap').on('click', '.room-list-item', function() {
 	var overViewContainer = $(this).closest('.reg-overview');
 	overViewContainer.append($('<img>').attr('src', WP_Seatreg.plugin_dir_url + 'img/ajax_loader.gif').addClass('ajax_loader'));
 
-	var promise = seaterg_admin_ajax2('seatreg_get_room_stats', code, {
+	var promise = genericseattermerg_admin_ajax2('seatreg_get_room_stats', code, {
 		target: target, 
 		calendarDate: calendarDate
 	});
@@ -369,15 +369,15 @@ $('#existing-regs-wrap').on('click', '.room-list-item', function() {
 			var donutWrapper = $('#existing-regs-wrap').find('.reg-overview-donuts');		
 			var doughnutData = [
 				{
-					value: parseInt(donutWrapper.find('.seats-open-don').val()),
+					value: parseInt(donutWrapper.find('.genericseatterms-open-don').val()),
 					color:"#61B329"
 				},
 				{
-					value : parseInt(donutWrapper.find('.seats-bron-don').val()),
+					value : parseInt(donutWrapper.find('.genericseatterms-bron-don').val()),
 					color : "#FFFF00"
 				},
 				{
-					value : parseInt(donutWrapper.find('.seats-taken-don').val()),
+					value : parseInt(donutWrapper.find('.genericseatterms-taken-don').val()),
 					color : "red"
 				}
 			
@@ -399,15 +399,15 @@ $('.reg-overview-donuts').each(function() {
 	var donutWrapper = $(this);
 	var doughnutData = [
 		{
-			value: parseInt(donutWrapper.find('.seats-open-don').val()),
+			value: parseInt(donutWrapper.find('.genericseatterms-open-don').val()),
 			color:"#61B329"
 		},
 		{
-			value : parseInt(donutWrapper.find('.seats-bron-don').val()),
+			value : parseInt(donutWrapper.find('.genericseatterms-bron-don').val()),
 			color : "#FFFF00"
 		},
 		{
-			value : parseInt(donutWrapper.find('.seats-taken-don').val()),
+			value : parseInt(donutWrapper.find('.genericseatterms-taken-don').val()),
 			color : "red"
 		}
 	
@@ -444,7 +444,7 @@ function managerSearch() {
 	var wrapper = $('#seatreg-booking-manager .seatreg-tabs-content');
 	var queryParams = new URLSearchParams(window.location.search); 
 	wrapper.append($('<img>').attr('src', WP_Seatreg.plugin_dir_url + 'img/ajax_loader.gif').addClass('ajax_loader'));
-	var promise = seaterg_admin_ajax2('seatreg_search_bookings', code, {
+	var promise = genericseattermerg_admin_ajax2('seatreg_search_bookings', code, {
 		searchTerm: searchTerm,
 		orderby: bookingOrderInManager,
 		calendarDate: queryParams.get('calendar-date')
@@ -470,7 +470,7 @@ $('#seatreg-booking-manager').on('click','.manager-box-link', function() {
 	var wrapper = $('#seatreg-booking-manager .seatreg-tabs-content');
 	wrapper.append($('<img>').attr('src', WP_Seatreg.plugin_dir_url + 'img/ajax_loader.gif').addClass('ajax_loader'));
 
-	var promise = seaterg_admin_ajax2('seatreg_get_booking_manager', code, {searchTerm: searchTerm, orderby: orderBy});
+	var promise = genericseattermerg_admin_ajax2('seatreg_get_booking_manager', code, {searchTerm: searchTerm, orderby: orderBy});
 
 	promise.done(function(data) {
 		wrapper.empty().html(data).promise().done(function() {
@@ -488,22 +488,22 @@ $('#seatreg-booking-manager').on('click','.manager-box-link', function() {
 //remove input check from other bookings. Mark same bookings checked
 $('#seatreg-booking-manager').on('click', '.bron-action', function() {
 	var check = $(this);
-	var bookingId = check.closest('.reg-seat-item').find('.booking-identification').val();
+	var bookingId = check.closest('.reg-genericseatterm-item').find('.booking-identification').val();
 
 	check.closest('.action-select').find('.bron-action').not(check).prop('checked', false);
 
-	var confirmCheck = check.closest('.reg-seat-item').find('.bron-action[data-action=confirm]').is(':checked');
-	var unapproveCheck = check.closest('.reg-seat-item').find('.bron-action[data-action=unapprove]').is(':checked');
+	var confirmCheck = check.closest('.reg-genericseatterm-item').find('.bron-action[data-action=confirm]').is(':checked');
+	var unapproveCheck = check.closest('.reg-genericseatterm-item').find('.bron-action[data-action=unapprove]').is(':checked');
 		
 	$(this).closest('.tab_container').find('.bron-action').not(check).each(function() {
-		if( $(this).closest('.reg-seat-item').find('.booking-identification').val() == bookingId ) {
+		if( $(this).closest('.reg-genericseatterm-item').find('.booking-identification').val() == bookingId ) {
 
 			if(!check.is('[data-action=del]')) {
-				$(this).closest('.reg-seat-item').find('.bron-action[data-action=del]').prop('checked', false);
+				$(this).closest('.reg-genericseatterm-item').find('.bron-action[data-action=del]').prop('checked', false);
 			}
 			
-			$(this).closest('.reg-seat-item').find('.bron-action[data-action=confirm]').prop('checked', confirmCheck);
-			$(this).closest('.reg-seat-item').find('.bron-action[data-action=unapprove]').prop('checked', unapproveCheck);
+			$(this).closest('.reg-genericseatterm-item').find('.bron-action[data-action=confirm]').prop('checked', confirmCheck);
+			$(this).closest('.reg-genericseatterm-item').find('.bron-action[data-action=unapprove]').prop('checked', unapproveCheck);
 		}
 	});
 });
@@ -604,18 +604,18 @@ $('.seatreg-registrations [data-action=view-registration-activity').on('click', 
 $('#seatreg-booking-manager').on('click', 'button[data-action=change-payment-status]', function(e) {
 	e.preventDefault();
 	var $this = $(this);
-	var bookingId = $this.closest('.reg-seat-item').data('booking-id');
+	var bookingId = $this.closest('.reg-genericseatterm-item').data('booking-id');
 	var selectedStatus = $this.siblings('select[name="payment-status"]').val();
 	var selectedStatusText = $this.siblings('select[name="payment-status"]').find(":selected").text();
 
 	$this.prop('disabled', true);
 
-	var promise = seaterg_admin_ajax('seatreg_booking_payment_status_change', bookingId, {
+	var promise = genericseattermerg_admin_ajax('seatreg_booking_payment_status_change', bookingId, {
 		bookingStatus: selectedStatus
 	});
 
 	promise.done(function() {
-		var $bookingItems = $('.reg-seat-item[data-booking-id="'+ bookingId +'"]');
+		var $bookingItems = $('.reg-genericseatterm-item[data-booking-id="'+ bookingId +'"]');
 
 		$bookingItems.each(function() {
 			$(this).find('.payment-status-box').text( selectedStatusText );
@@ -643,7 +643,7 @@ $('#seatreg-booking-manager').on('click', 'button[data-action=add-payment-log]',
 
 	promise.done(function() {
 		$this.removeAttr("disabled");
-		var $logsWrappers = $('#seatreg-booking-manager .reg-seat-item[data-booking-id="'+ bookingId +'"]').find('.payment-log-wrap');
+		var $logsWrappers = $('#seatreg-booking-manager .reg-genericseatterm-item[data-booking-id="'+ bookingId +'"]').find('.payment-log-wrap');
 		var logClass = '';
 
 		if(logType === 'error') {
@@ -682,30 +682,30 @@ $('#seatreg-booking-manager').on('click', '.action-control', function() {
 	var calendarDate = queryParams.get('calendar-date');
 
 	wrapper.append($('<img>').attr('src', WP_Seatreg.plugin_dir_url + 'img/ajax_loader.gif').addClass('ajax_loader'));
-	button.parent().find('.reg-seat-item').each(function() {
+	button.parent().find('.reg-genericseatterm-item').each(function() {
 		$(this).find('.bron-action').each(function() {
 			if($(this).prop('checked')) {
 				if($(this).attr('data-action') == 'del') {
 					data.push({
 						booking_id: $(this).val(),
 						action: 'del',
-						room_name: $(this).closest('.reg-seat-item').find('.seat-room-box').text(),
-						seat_nr: $(this).closest('.reg-seat-item').find('.seat-nr-box').text(),
-						seat_id: $(this).closest('.reg-seat-item').find('.seat-id').val(),
+						room_name: $(this).closest('.reg-genericseatterm-item').find('.genericseatterm-room-box').text(),
+						genericseatterm_nr: $(this).closest('.reg-genericseatterm-item').find('.genericseatterm-nr-box').text(),
+						genericseatterm_id: $(this).closest('.reg-genericseatterm-item').find('.genericseatterm-id').val(),
 					});
 				}else if($(this).attr('data-action') == 'confirm') {
 					data.push({
 						booking_id: $(this).val(),
 						action: 'conf',
-						room_name: $(this).closest('.reg-seat-item').find('.seat-room-box').text(),
-						seat_nr: $(this).closest('.reg-seat-item').find('.seat-nr-box').text()
+						room_name: $(this).closest('.reg-genericseatterm-item').find('.genericseatterm-room-box').text(),
+						genericseatterm_nr: $(this).closest('.reg-genericseatterm-item').find('.genericseatterm-nr-box').text()
 					});
 				}else if($(this).attr('data-action') == 'unapprove') {
 					data.push({
 						booking_id: $(this).val(),
 						action: 'unapprove',
-						room_name: $(this).closest('.reg-seat-item').find('.seat-room-box').text(),
-						seat_nr: $(this).closest('.reg-seat-item').find('.seat-nr-box').text()
+						room_name: $(this).closest('.reg-genericseatterm-item').find('.genericseatterm-room-box').text(),
+						genericseatterm_nr: $(this).closest('.reg-genericseatterm-item').find('.genericseatterm-nr-box').text()
 					});
 				}
 			}
@@ -713,7 +713,7 @@ $('#seatreg-booking-manager').on('click', '.action-control', function() {
 	});
 
 
-	var promise = seaterg_admin_ajax2('seatreg_confirm_del_bookings', code, {
+	var promise = genericseattermerg_admin_ajax2('seatreg_confirm_del_bookings', code, {
 		searchTerm: searchTerm,
 		orderby: bookingOrderInManager, 
 		actionData: JSON.stringify(data),
@@ -736,7 +736,7 @@ $('#seatreg-booking-manager').on('click', '.action-control', function() {
 	promise.fail = seatreg_admin_ajax_error;
 });
 
-$('#seatreg-booking-manager').on('click', '#add-modal-add-seat', function() {
+$('#seatreg-booking-manager').on('click', '#add-modal-add-genericseatterm', function() {
 	var bookingItemsWrap = $(this).closest('form').find('.modal-body-items');
 	var bookingItems = bookingItemsWrap.find('.modal-body-item');
 	var newItem = bookingItems.first().clone();
@@ -744,7 +744,7 @@ $('#seatreg-booking-manager').on('click', '#add-modal-add-seat', function() {
 	bookingItemsWrap .append(newItem);
 });
 
-$('#seatreg-booking-manager').on('click', '#add-modal-remove-seat', function() {
+$('#seatreg-booking-manager').on('click', '#add-modal-remove-genericseatterm', function() {
 	var bookingItemsWrap = $('#add-booking-modal-form .modal-body-item');
 
 	if(bookingItemsWrap.length === 1) {
@@ -886,7 +886,7 @@ function seatregGenerateImportBookingBox(bookingData, validationData) {
 	
 	$bookingWrap.append('<div><b>Name: </b>' + bookingData.first_name + ',</div>');
 	$bookingWrap.append('<div>' + bookingData.last_name + ',</div>');
-	$bookingWrap.append('<div><b>Seat: </b>' + bookingData.seat_nr + '</div>');
+	$bookingWrap.append('<div><b>Seat: </b>' + bookingData.genericseatterm_nr + '</div>');
 
 	if(validationData.room_name) {
 		$bookingWrap.append('<div><b>Room: </b>' + validationData.room_name + '</div>');
@@ -902,8 +902,8 @@ function seatregGenerateImportBookingBox(bookingData, validationData) {
 		'<input type="hidden" data-name="first_name" value="' + bookingData.first_name + '" />',
 		'<input type="hidden" data-name="last_name" value="' + bookingData.last_name + '" />',
 		'<input type="hidden" data-name="email" value="' + bookingData.email + '" />',
-		'<input type="hidden" data-name="seat_id" value="' + bookingData.seat_id + '" />',
-		'<input type="hidden" data-name="seat_nr" value="' + bookingData.seat_nr + '" />',
+		'<input type="hidden" data-name="genericseatterm_id" value="' + bookingData.genericseatterm_id + '" />',
+		'<input type="hidden" data-name="genericseatterm_nr" value="' + bookingData.genericseatterm_nr + '" />',
 		'<input type="hidden" data-name="room_uuid" value="' + bookingData.room_uuid + '" />',
 		'<input type="hidden" data-name="booking_date" value="' + bookingData.booking_date + '" />',
 		'<input type="hidden" data-name="booking_confirm_date" value="' + bookingData.booking_confirm_date + '" />',
@@ -925,8 +925,8 @@ function normalizeImportData(csvRow) {
 		first_name: csvRow[WP_Seatreg.SEATREG_CSV_COL_FIRST_NAME],
 		last_name: csvRow[WP_Seatreg.SEATREG_CSV_COL_LAST_NAME],
 		email: csvRow[WP_Seatreg.SEATREG_CSV_COL_EMAIL], 
-		seat_nr: csvRow[WP_Seatreg.SEATREG_CSV_COL_SEAT_NR],
-		seat_id: csvRow[WP_Seatreg.SEATREG_CSV_COL_SEAT_ID],
+		genericseatterm_nr: csvRow[WP_Seatreg.SEATREG_CSV_COL_GENERICSEATTERM_NR],
+		genericseatterm_id: csvRow[WP_Seatreg.SEATREG_CSV_COL_GENERICSEATTERM_ID],
 		room_uuid: csvRow[WP_Seatreg.SEATREG_CSV_COL_ROOM_UUID],
 		booking_date: csvRow[WP_Seatreg.SEATREG_CSV_COL_BOOKING_DATE],
 		booking_confirm_date: csvRow[WP_Seatreg.SEATREG_CSV_COL_BOOKING_CONFIRM_DATE],
@@ -956,8 +956,8 @@ $('#import-bookings-finalization-modal button[data-action="start-booking-import"
 			first_name: $booking.find('[data-name="first_name"]').val(),
 			last_name: $booking.find('[data-name="last_name"]').val(),
 			email: $booking.find('[data-name="email"]').val(),
-			seat_nr: $booking.find('[data-name="seat_nr"]').val(),
-			seat_id: $booking.find('[data-name="seat_id"]').val(),
+			genericseatterm_nr: $booking.find('[data-name="genericseatterm_nr"]').val(),
+			genericseatterm_id: $booking.find('[data-name="genericseatterm_id"]').val(),
 			room_uuid: $booking.find('[data-name="room_uuid"]').val(),
 			booking_date: $booking.find('[data-name="booking_date"]').val(),
 			booking_confirm_date: $booking.find('[data-name="booking_confirm_date"]').val(),
@@ -1014,14 +1014,14 @@ $('#seatreg-booking-manager').on('click', '.edit-btn',function() {
 	var modalCutsom = modal.find('.modal-body-custom');
 	modalCutsom.empty();
 	console.log(info.find('.f-name').val());
-	modal.find('#edit-seat').val(info.find('.seat-id').val());
-	modal.find('#edit-room').val(info.find('.seat-room-box').text());
+	modal.find('#edit-genericseatterm').val(info.find('.genericseatterm-id').val());
+	modal.find('#edit-room').val(info.find('.genericseatterm-room-box').text());
 	modal.find('#edit-fname').val(info.find('.f-name').val());
 	modal.find('#edit-lname').val(info.find('.l-name').val());
 	modal.find('#modal-code').val($(this).attr('data-code'));
 	modal.find('#booking-id').val($(this).attr('data-booking'));
 	modal.find('#r-id').val($(this).attr('data-id'));
-	modal.find('#edit-booking-seat-nr').val(info.find('.seat-nr-box').text());
+	modal.find('#edit-booking-genericseatterm-nr').val(info.find('.genericseatterm-nr-box').text());
 	info.find('.custom-field').each(function() {
 		var type = $(this).data('type');
 
@@ -1047,7 +1047,7 @@ $('#seatreg-booking-manager').on('click', '.edit-btn',function() {
 		}
 	});
 
-	$('#edit-room-error, #edit-seat-error').text('');
+	$('#edit-room-error, #edit-genericseatterm-error').text('');
 	modal.modal('show');
 });
 
@@ -1076,14 +1076,14 @@ $('#seatreg-booking-manager').on('click', '#generate-bookings-file', function() 
 	window.open(href + '&' + getParams +  calendarDateparam, '_blank');
 });
 
-$('#seatreg-booking-manager').on('click', '.seat-id-search', function() {
+$('#seatreg-booking-manager').on('click', '.genericseatterm-id-search', function() {
 	bookingManagerActiveAddBookingIdLookupIndex = $(this).closest('.modal-body-item').index();
-	$('#seat-id-modal').modal('show');
+	$('#genericseatterm-id-modal').modal('show');
 });
 
-$('#seatreg-booking-manager .seat-id-grid [data-action="select-id"]').on('click', function() {
-	$('#seatreg-booking-manager #add-booking-modal-form .modal-body-item').eq(bookingManagerActiveAddBookingIdLookupIndex).find('[name="seat-id[]"]').val( $(this).data('seat-id') );
-	$('#seat-id-modal').modal('hide');
+$('#seatreg-booking-manager .genericseatterm-id-grid [data-action="select-id"]').on('click', function() {
+	$('#seatreg-booking-manager #add-booking-modal-form .modal-body-item').eq(bookingManagerActiveAddBookingIdLookupIndex).find('[name="genericseatterm-id[]"]').val( $(this).data('genericseatterm-id') );
+	$('#genericseatterm-id-modal').modal('hide');
 });
 
 
@@ -1100,8 +1100,8 @@ $('#seatreg-booking-manager').on('click', '#add-booking-btn', function() {
 		
 		booking.find('.input-error').text('');
 
-		if(booking.find('[name="seat-id[]"]').val() === '') {
-			booking.find('[name="seat-id[]"]').closest('.add-modal-input-wrap').find('.input-error').text('No ID');
+		if(booking.find('[name="genericseatterm-id[]"]').val() === '') {
+			booking.find('[name="genericseatterm-id[]"]').closest('.add-modal-input-wrap').find('.input-error').text('No ID');
 			subBtn.css('display','inline').next().css('display','none');
 			allFieldsValid = false;
 		}
@@ -1171,25 +1171,25 @@ $('#seatreg-booking-manager').on('click', '#add-booking-btn', function() {
 				$('#add-booking-modal-form .modal-body-item').eq(data.index).find('[name="room[]"]').closest('.add-modal-input-wrap').find('.input-error').text(translator.translate('roomNotExist'));
 				alertify.error(translator.translate('roomNotExist'));
 			}
-			if(data.status === 'seat-id-searching') {
-				$('#add-booking-modal-form .modal-body-item').eq(data.index).find('[name="seat-id[]"]').closest('.add-modal-input-wrap').find('.input-error').text(translator.translate('seatIdNotExist'));
-				alertify.error(translator.translate('seatIdNotExist'));
+			if(data.status === 'genericseatterm-id-searching') {
+				$('#add-booking-modal-form .modal-body-item').eq(data.index).find('[name="genericseatterm-id[]"]').closest('.add-modal-input-wrap').find('.input-error').text(translator.translate('genericseattermIdNotExist'));
+				alertify.error(translator.translate('genericseattermIdNotExist'));
 			}
-			if(data.status === 'seat-booked') {
-				$('#add-booking-modal-form .modal-body-item').eq(data.index).find('[name="seat-id[]"]').closest('.add-modal-input-wrap').find('.input-error').text(translator.translate('seatAlreadyBookedPending'));
-				alertify.error(translator.translate('seatAlreadyBookedPending'));
+			if(data.status === 'genericseatterm-booked') {
+				$('#add-booking-modal-form .modal-body-item').eq(data.index).find('[name="genericseatterm-id[]"]').closest('.add-modal-input-wrap').find('.input-error').text(translator.translate('genericseattermAlreadyBookedPending'));
+				alertify.error(translator.translate('genericseattermAlreadyBookedPending'));
 			}
 			if(data.status === 'create failed') {
 				alert(translator.translate('errorBookingUpdate'));
 			}
 			if(data.status === 'custom field validation failed') {
-				if(data.message === 'Max seats limit exceeded') {
-					alert('Max seats limit exceeded');
+				if(data.message === 'Max genericseatterms limit exceeded') {
+					alert('Max genericseatterms limit exceeded');
 				}else {
 					alert('Custom field validation failed. ' + data.message);
 				}
 			}
-			if(data.status === 'duplicate-seat') {
+			if(data.status === 'duplicate-genericseatterm') {
 				alertify.error(translator.translate('duplicateSeatDetected'));
 			}
 		}
@@ -1203,20 +1203,20 @@ $('#seatreg-booking-manager').on('click', '#edit-update-btn', function() {
 	var modal = $('#edit-modal');
 	var customFields = [];
 	var code = $('#seatreg-reg-code').val();
-	var seatId = modal.find('#edit-seat').val();
-	var seat_room = modal.find('#edit-room').val(); 
+	var genericseattermId = modal.find('#edit-genericseatterm').val();
+	var genericseatterm_room = modal.find('#edit-room').val(); 
 	var first_name = modal.find('#edit-fname').val();
 	var last_name = modal.find('#edit-lname').val();
 	var calendarMode = $('#edit-date').length >= 1;
 
-	$('#edit-room-error, #edit-seat-error, #edit-date-error').text('');
-	if( seatId == '' ) {
-		$('#edit-seat-error').text('No seat');
+	$('#edit-room-error, #edit-genericseatterm-error, #edit-date-error').text('');
+	if( genericseattermId == '' ) {
+		$('#edit-genericseatterm-error').text('No genericseatterm');
 		subBtn.css('display','inline').next().css('display','none');
 
 		return;
 	}
-	if(seat_room == ''){
+	if(genericseatterm_room == ''){
 		$('#edit-room-error').text('No room');
 		subBtn.css('display','inline').next().css('display','none');
 
@@ -1266,9 +1266,9 @@ $('#seatreg-booking-manager').on('click', '#edit-update-btn', function() {
 		'firstName': first_name,
 		'lastName': last_name,
 		'bookingId': $('#booking-id').val(),
-		'seatId': seatId,
+		'genericseattermId': genericseattermId,
 		'customFieldData': JSON.stringify(customFields),
-		'seatRoom': seat_room,
+		'genericseattermRoom': genericseatterm_room,
 		'id': $('#r-id').val(),
 		'calendarDate': $('#edit-date').val()
 	}
@@ -1281,9 +1281,9 @@ $('#seatreg-booking-manager').on('click', '#edit-update-btn', function() {
 		if(data.status == 'updated') {
 			var bookingLoc = $('#r-id').val();
 			var bookingInfo = $('#seatreg-booking-manager .edit-btn[data-id="'+ bookingLoc +'"]').parent();
-			bookingInfo.find('.seat-nr-box').text(data.newSeatNr);
-			bookingInfo.find('.seat-room-box').text(seat_room);
-			bookingInfo.find('.seat-name-box').attr('title', first_name + ' ' + last_name).find('.full-name').text(first_name + ' ' + last_name);
+			bookingInfo.find('.genericseatterm-nr-box').text(data.newSeatNr);
+			bookingInfo.find('.genericseatterm-room-box').text(genericseatterm_room);
+			bookingInfo.find('.genericseatterm-name-box').attr('title', first_name + ' ' + last_name).find('.full-name').text(first_name + ' ' + last_name);
 			bookingInfo.find('.f-name').val(first_name);
 			bookingInfo.find('.l-name').val(last_name);
 
@@ -1326,13 +1326,13 @@ $('#seatreg-booking-manager').on('click', '#edit-update-btn', function() {
 				$('#edit-room-error').text(translator.translate('roomNotExist'));
 				alertify.error(translator.translate('roomNotExist'));
 			}
-			if(data.status == 'seat-id-searching') {
-				$('#edit-seat-error').text(translator.translate('seatIdNotExist'));
-				alertify.error(translator.translate('seatIdNotExist'));
+			if(data.status == 'genericseatterm-id-searching') {
+				$('#edit-genericseatterm-error').text(translator.translate('genericseattermIdNotExist'));
+				alertify.error(translator.translate('genericseattermIdNotExist'));
 			}
-			if(data.status == 'seat-booked') {
-				$('#edit-seat-error').text(translator.translate('seatAlreadyBookedPending'));
-				alertify.error(translator.translate('seatAlreadyBookedPending'));
+			if(data.status == 'genericseatterm-booked') {
+				$('#edit-genericseatterm-error').text(translator.translate('genericseattermAlreadyBookedPending'));
+				alertify.error(translator.translate('genericseattermAlreadyBookedPending'));
 			}
 			if(data.status == 'update failed') {
 				alert(translator.translate('errorBookingUpdate'));
@@ -1580,7 +1580,7 @@ $('#seatreg-settings-form #custom-payments').on('click', '.current-custom-paymen
 
 	$customPayment.find('.current-custom-payment-icon__delete').css('display', 'none');
 	$customPayment.find('.current-custom-payment-icon__loading').css('display', 'block');
-	var promise = seaterg_admin_ajax('seatreg_remove_custom_payment_img', registrationCode, imageName);
+	var promise = genericseattermerg_admin_ajax('seatreg_remove_custom_payment_img', registrationCode, imageName);
 
 	promise.done(function() {
 		$customPayment.find('.current-custom-payment-icon__loading').css('display', '');
@@ -1632,7 +1632,7 @@ $('#seatreg-settings-form #public-api-tokens').on('click', '.remove-token', func
 	var token = $(this).closest('.token-box').data('token');
 
 	if( window.confirm(translator.translate('areYouSure')) ) {
-		var promise = seaterg_admin_ajax2('seatreg_delete_api_token', code, {
+		var promise = genericseattermerg_admin_ajax2('seatreg_delete_api_token', code, {
 			'api-token': token,
 		});
 
@@ -1668,7 +1668,7 @@ $('#seatreg-settings-form #create-api-token').on('click', function(e) {
 	var $this = $(this);
 	$this.text(translator.translate('loading'));
 
-	var promise = seaterg_admin_ajax2('seatreg_create_api_token', code);
+	var promise = genericseattermerg_admin_ajax2('seatreg_create_api_token', code);
 	promise.done(function(data) {
 		$this.text(translator.translate('createApiToken'));
 		if(data.success === true) {

@@ -13,7 +13,7 @@
                     <input type="text" name="new-registration-name" id="copy-registration-<?php echo $registrationCode; ?>" style="margin-left: 12px" maxlength="<?php echo SEATREG_REGISTRATION_NAME_MAX_LENGTH; ?>">
                     <input type='hidden' name='action' value='seatreg_copy_registration' />
                     <input type='hidden' name='registration_code' value='<?php echo $registrationCode; ?>' />
-                    <?php echo seatrag_generate_nonce_field('seatreg-admin-nonce'); ?>
+                    <?php echo genericseattermrag_generate_nonce_field('seatreg-admin-nonce'); ?>
                     <br><br>
                     <p>
                         <?php esc_html_e('Registration scheme and most of the settings will be copied.', 'seatreg'); ?>
